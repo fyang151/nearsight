@@ -1,8 +1,8 @@
 "use client";
 
-// import { Pixyelator } from "../commands/pixyelator/index";
 import championIcons from "../data/championIcons";
 import champions from "../data/champions.json";
+import { Champion } from "../components/Champion";
 
 type ChampionIcons = {
   [key: string]: {
@@ -10,7 +10,7 @@ type ChampionIcons = {
   };
 };
 
-import { useState, useEffect } from "react"; // Incorrect casing
+import { useState, useEffect } from "react";
 
 const ChampionGuesser = () => {
   const championsData = champions.data;
@@ -20,11 +20,16 @@ const ChampionGuesser = () => {
   const [championIcon, setChampionIcon] = useState<any>(null);
   const [guess, setGuess] = useState("");
 
+  const [xPixels, setXPixels] = useState(3);
+  const [yPixels, setYPixels] = useState(3);
+
+  const [maxXPixels, setMaxXPixels] = useState<number | undefined>(undefined);
+  const [maxYPixels, setMaxYPixels] = useState<number | undefined>(undefined);
+
   const setRandomChampion = () => {
     const randomChampionKey = Math.floor(Math.random() * championsArray.length);
     const currentChampion = championsArray[randomChampionKey];
     const championIcon = (championIcons as any)[currentChampion.id].default.src;
-    console.log("currentChampion", currentChampion);
     setCurrentChampion(currentChampion);
     setChampionIcon(championIcon);
   };
@@ -60,8 +65,28 @@ const ChampionGuesser = () => {
   return (
     <div>
       <h1>guesser component</h1>
-      <img src={championIcon} />
+      <Champion
+        championIcon={championIcon}
+        xPixels={xPixels}
+        yPixels={yPixels}
+      />
       <button onClick={setRandomChampion}>skip</button>
+      <p>setXPixels: {xPixels}</p>
+      <input
+        type="range"
+        min="1"
+        max="24"
+        value={xPixels}
+        onChange={(event) => setXPixels(Number(event.target.value))}
+      />
+      <p>setYPixels: {yPixels}</p>
+      <input
+        type="range"
+        min="1"
+        max="24"
+        value={yPixels}
+        onChange={(event) => setYPixels(Number(event.target.value))}
+      />
       <form onSubmit={handleSubmit}>
         <label>
           Guess the Champion!
