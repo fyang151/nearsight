@@ -1,43 +1,18 @@
 "use client";
 
-import championIcons from "../data/championIcons";
-import champions from "../data/champions.json";
-import { Champion } from "../components/Champion";
-
-type ChampionIcons = {
-  [key: string]: {
-    default: { src: string };
-  };
-};
-
 import { useState, useEffect } from "react";
 
-const ChampionGuesser = () => {
-  const championsData = champions.data;
-  const championsArray = Object.values(championsData);
+import { useGame } from "../hooks/useGame";
 
-  const [currentChampion, setCurrentChampion] = useState<any>(null);
-  const [championIcon, setChampionIcon] = useState<any>(null);
+import { Champion } from "../components/Champion";
+
+const ChampionGuesser = () => {
+  const { currentChampion, championIcon, newChampion } = useGame();
+
   const [guess, setGuess] = useState("");
 
   const [xPixels, setXPixels] = useState(3);
   const [yPixels, setYPixels] = useState(3);
-
-  const [maxXPixels, setMaxXPixels] = useState<number | undefined>(undefined);
-  const [maxYPixels, setMaxYPixels] = useState<number | undefined>(undefined);
-
-  const setRandomChampion = () => {
-    const randomChampionKey = Math.floor(Math.random() * championsArray.length);
-    const currentChampion = championsArray[randomChampionKey];
-    const championIcon = (championIcons as any)[currentChampion.id].default.src;
-    setCurrentChampion(currentChampion);
-    setChampionIcon(championIcon);
-  };
-
-  const newChampion = () => {
-    setRandomChampion();
-    setGuess("");
-  };
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
@@ -56,12 +31,6 @@ const ChampionGuesser = () => {
     }
   }, [guess]);
 
-  useEffect(() => {
-    setRandomChampion();
-  }, []);
-
-  console.log("currentChampion", currentChampion);
-
   return (
     <div>
       <h1>guesser component</h1>
@@ -70,7 +39,7 @@ const ChampionGuesser = () => {
         xPixels={xPixels}
         yPixels={yPixels}
       />
-      <button onClick={setRandomChampion}>skip</button>
+      <button onClick={newChampion}>skip</button>
       <p>setXPixels: {xPixels}</p>
       <input
         type="range"
