@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 
 import championIcons from "../data/championIcons";
 import champions from "../data/champions.json";
@@ -10,8 +10,14 @@ type ChampionIcons = {
 };
 
 export const useGame = () => {
-  const [currentChampion, setCurrentChampion] = useState<any>(undefined);
-  const [championIcon, setChampionIcon] = useState<any>(undefined);
+  const allChampions = Object.values(champions.data);
+
+  const currentChampions = useRef<any>([]);
+
+  const championDataRef = useRef<any>({
+     championInfo: undefined,
+    championIcon: undefined,
+  });
 
   const pixelateImage = (image: any) => {
     // just a placeholder for now
@@ -19,31 +25,42 @@ export const useGame = () => {
   };
 
   const getRandomChampion = () => {
-    const championsArray = Object.values(champions.data);
-    const randomChampionKey = Math.floor(Math.random() * championsArray.length);
-    const currentChampion = championsArray[randomChampionKey];
-    const selectedChampionIcon = (championIcons as ChampionIcons)[
-      currentChampion.id
-    ].default.src;
-    const pixelatedChampionIcon = pixelateImage(selectedChampionIcon);
+    const randomChampionKey = Math.floor(Math.random() * allChampions.length);
 
-    setChampionIcon(pixelatedChampionIcon);
-    setCurrentChampion(currentChampion);
+    const newChampionInfo = allChampions[randomChampionKey];
+    const newChampionIcon = (championIcons as ChampionIcons)[newChampionInfo.id]
+      .default.src;
+    const pixelatedChampionIcon = pixelateImage(newChampionIcon);
+
+    var newChampionData = {
+      championInfo: newChampionInfo,
+      championIcon: pixelatedChampionIcon,
+    };
+
+    return newChampionData;
+  };
+
+  const getCurrentChampions = () => {
+    for (let i = 0; i < 3; i++) {
+      currentChampions.current.push(getRandomChampion());
+    }
   };
 
   const newChampion = () => {
-    getRandomChampion();
+    if (currentChampions.current.length === 0) {
+      getCurrentChampions();
+    }
+    championDataRef.current = currentChampions.current.shift();
   };
 
+  console.log("currentChampions", currentChampions.current);
+
   useEffect(() => {
-    getRandomChampion();
+    newChampion();
   }, []);
 
-  console.log("currentChampion", currentChampion);
-  
   return {
-    currentChampion,
-    championIcon,
+    championData: championDataRef.current,
     newChampion,
   };
 };
