@@ -7,7 +7,7 @@ import { useGame } from "../hooks/useGame";
 import { Champion } from "../components/Champion";
 
 const ChampionGuesser = () => {
-  const { currentChampion, championIcon, newChampion } = useGame();
+  const { champion, newChampion, loading } = useGame();
 
   const [guess, setGuess] = useState("");
 
@@ -24,9 +24,12 @@ const ChampionGuesser = () => {
 
   useEffect(() => {
     if (
-      currentChampion &&
-      normalizeString(currentChampion.name) === guess.toLowerCase()
+      !loading &&
+      champion &&
+      normalizeString(champion.info.name) === guess.toLowerCase()
     ) {
+      console.log("this fired");
+      setGuess("");
       newChampion();
     }
   }, [guess]);
@@ -34,11 +37,15 @@ const ChampionGuesser = () => {
   return (
     <div>
       <h1>guesser component</h1>
-      <Champion
-        championIcon={championIcon}
-        xPixels={xPixels}
-        yPixels={yPixels}
-      />
+      {loading ? (
+        <p>loading...</p>
+      ) : (
+        <Champion
+          championIcon={champion?.icon}
+          xPixels={xPixels}
+          yPixels={yPixels}
+        />
+      )}
       <button onClick={newChampion}>skip</button>
       <p>setXPixels: {xPixels}</p>
       <input

@@ -20,7 +20,6 @@ function dataURLToImageElement(dataUrl) {
 }
 
 function imageUrlToImageElement(imageUrl) {
-  console.log("aight we are converting", imageUrl);
   const img = new Image();
   img.crossOrigin = "anonymous";
   img.src = imageUrl;
