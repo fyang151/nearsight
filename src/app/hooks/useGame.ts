@@ -21,11 +21,11 @@ export const useGame = () => {
   const [championQueue, setChampionQueue] = useState<Champion[]>([]);
   const [isNextQueue, setIsNextQueue] = useState<boolean>(true);
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const pixelateImage = async (image: any) => {
     // just a placeholder for now
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     return image;
   };
 
@@ -51,12 +51,19 @@ export const useGame = () => {
   useEffect(() => {
     console.log("championQueue", championQueue);
     if (championQueue.length === 0) {
-      loadChampion();
+      setLoading(true);
+    } else {
+      setLoading(false);
     }
   }, [championQueue]);
 
   useEffect(() => {
-    newChampion();
+    const preloadChampions = async () => {
+      for (let i = 0; i < 5; i++) {
+        await loadChampion();
+      }
+    };
+    preloadChampions();
   }, []);
 
   useEffect(() => {
@@ -65,7 +72,10 @@ export const useGame = () => {
     if (!loading) {
       if (isNextQueue) {
         const nextChampion = championQueue.shift();
+
+        setChampionQueue([...championQueue]);
         setChampion(nextChampion);
+
         loadChampion();
         setIsNextQueue(false);
       }

@@ -36,17 +36,22 @@ const ChampionGuesser = () => {
 
   return (
     <div>
-      <h1>guesser component</h1>
-      {loading ? (
-        <p>loading...</p>
-      ) : (
-        <Champion
-          championIcon={champion?.icon}
-          xPixels={xPixels}
-          yPixels={yPixels}
-        />
-      )}
-      <button onClick={newChampion}>skip</button>
+      <div>
+        <h1>guesser component</h1>
+        <button onClick={newChampion}>skip</button>
+        <br />
+
+        {loading ? (
+          <p>loading...</p>
+        ) : (
+          <Champion
+            championIcon={champion?.icon}
+            xPixels={xPixels}
+            yPixels={yPixels}
+          />
+        )}
+      </div>
+
       <p>setXPixels: {xPixels}</p>
       <input
         type="range"
