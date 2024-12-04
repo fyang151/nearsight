@@ -8,10 +8,13 @@ champsRes = requests.get(champsUrl)
 
 champsData = champsRes.json()
 
-current_directory = os.getcwd()
-
 scriptDir = os.path.dirname(os.path.abspath(__file__))
 filePath = os.path.join(scriptDir, "champions.json")
 
+if os.path.exists(filePath):
+  os.remove(filePath)
+
 with open(filePath, "w") as f:
   f.write(champsRes.text)
+  
+print(f"Downloaded champion data to {filePath}")
