@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
 import { useGame } from "../hooks/useGame";
 
-import { Champion } from "../components/Champion";
+import { ChampionIcon } from "../components/Champion";
 
 const ChampionGuesser = () => {
   const { champion, newChampion, loading } = useGame();
@@ -28,7 +27,6 @@ const ChampionGuesser = () => {
       champion &&
       normalizeString(champion.info.name) === guess.toLowerCase()
     ) {
-      console.log("this fired");
       setGuess("");
       newChampion();
     }
@@ -44,7 +42,7 @@ const ChampionGuesser = () => {
         {loading ? (
           <p>loading...</p>
         ) : (
-          <Champion
+          <ChampionIcon
             championIcon={champion?.icon}
             xPixels={xPixels}
             yPixels={yPixels}

@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 
 import championIcons from "../data/championIcons";
 import champions from "../data/champions.json";
-import next from "next";
+
+import { Pixyelator } from "../commands/pixyelator";
 
 type ChampionIcons = {
   [key: string]: {
@@ -23,10 +24,18 @@ export const useGame = () => {
 
   const [loading, setLoading] = useState<boolean>(true);
 
-  const pixelateImage = async (image: any) => {
+  const pixelateImage = async (
+    image: any,
+    xPixels: number,
+    yPixels: number
+  ) => {
     // just a placeholder for now
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-    return image;
+    const pixelatedChampionNew = await Pixyelator.toDataURL(
+      image,
+      xPixels,
+      yPixels
+    );
+    return pixelatedChampionNew;
   };
 
   const loadChampion = async () => {
@@ -38,7 +47,11 @@ export const useGame = () => {
     const selectedChampionIcon = (championIcons as ChampionIcons)[
       currentChampion.id
     ].default.src;
-    const pixelatedChampionIcon = await pixelateImage(selectedChampionIcon);
+    const pixelatedChampionIcon = await pixelateImage(
+      selectedChampionIcon,
+      3,
+      3
+    );
 
     const newChampion = {
       info: currentChampion,
