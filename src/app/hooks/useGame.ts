@@ -1,7 +1,8 @@
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import championIcons from "../data/championIcons";
 import champions from "../data/champions.json";
+import next from "next";
 
 type ChampionIcons = {
   [key: string]: {
@@ -9,58 +10,87 @@ type ChampionIcons = {
   };
 };
 
+type Champion = {
+  info: any;
+  icon: string;
+};
+
 export const useGame = () => {
-  const allChampions = Object.values(champions.data);
+  const [champion, setChampion] = useState<Champion | undefined>(undefined);
 
-  const currentChampions = useRef<any>([]);
+  const [championQueue, setChampionQueue] = useState<Champion[]>([]);
+  const [isNextQueue, setIsNextQueue] = useState<boolean>(true);
 
-  const championDataRef = useRef<any>({
-     championInfo: undefined,
-    championIcon: undefined,
-  });
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const pixelateImage = (image: any) => {
+  const pixelateImage = async (image: any) => {
     // just a placeholder for now
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     return image;
   };
 
-  const getRandomChampion = () => {
-    const randomChampionKey = Math.floor(Math.random() * allChampions.length);
+  const loadChampion = async () => {
+    const championsArray = Object.values(champions.data);
+    const randomChampionKey = Math.floor(Math.random() * championsArray.length);
 
-    const newChampionInfo = allChampions[randomChampionKey];
-    const newChampionIcon = (championIcons as ChampionIcons)[newChampionInfo.id]
-      .default.src;
-    const pixelatedChampionIcon = pixelateImage(newChampionIcon);
+    const currentChampion = championsArray[randomChampionKey];
 
-    var newChampionData = {
-      championInfo: newChampionInfo,
-      championIcon: pixelatedChampionIcon,
+    const selectedChampionIcon = (championIcons as ChampionIcons)[
+      currentChampion.id
+    ].default.src;
+    const pixelatedChampionIcon = await pixelateImage(selectedChampionIcon);
+
+    const newChampion = {
+      info: currentChampion,
+      icon: pixelatedChampionIcon,
     };
 
-    return newChampionData;
+    setChampionQueue((prev) => [...prev, newChampion]);
   };
-
-  const getCurrentChampions = () => {
-    for (let i = 0; i < 3; i++) {
-      currentChampions.current.push(getRandomChampion());
-    }
-  };
-
-  const newChampion = () => {
-    if (currentChampions.current.length === 0) {
-      getCurrentChampions();
-    }
-    championDataRef.current = currentChampions.current.shift();
-  };
-
-  console.log("currentChampions", currentChampions.current);
 
   useEffect(() => {
-    newChampion();
+    console.log("championQueue", championQueue);
+    if (championQueue.length === 0) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [championQueue]);
+
+  useEffect(() => {
+    const preloadChampions = async () => {
+      for (let i = 0; i < 5; i++) {
+        await loadChampion();
+      }
+    };
+    preloadChampions();
   }, []);
 
+  useEffect(() => {
+    console.log("loading", loading);
+
+    if (!loading) {
+      if (isNextQueue) {
+        const nextChampion = championQueue.shift();
+
+        setChampionQueue([...championQueue]);
+        setChampion(nextChampion);
+
+        loadChampion();
+        setIsNextQueue(false);
+      }
+    } else {
+      console.log("we are loading up in thsi bitch you cant do that");
+    }
+  }, [loading, isNextQueue]);
+
+  const newChampion = () => {
+    setIsNextQueue(true);
+  };
+
   return {
-    championData: championDataRef.current,
+    champion,
     newChampion,
+    loading,
   };
 };

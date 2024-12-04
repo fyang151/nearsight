@@ -7,13 +7,7 @@ import { useGame } from "../hooks/useGame";
 import { Champion } from "../components/Champion";
 
 const ChampionGuesser = () => {
-  // guess what this is for
-  const [_, meow] = useState(true);
-
-  const forceUpdate = () => meow((prev) => !prev);
-
-  const { championData, newChampion } = useGame();
-  const { championInfo, championIcon } = championData;
+  const { champion, newChampion, loading } = useGame();
 
   const [guess, setGuess] = useState("");
 
@@ -30,29 +24,34 @@ const ChampionGuesser = () => {
 
   useEffect(() => {
     if (
-      championInfo &&
-      normalizeString(championInfo.name) === guess.toLowerCase()
+      !loading &&
+      champion &&
+      normalizeString(champion.info.name) === guess.toLowerCase()
     ) {
-      newChampion();
+      console.log("this fired");
       setGuess("");
+      newChampion();
     }
   }, [guess]);
 
-  useEffect(() => {
-    forceUpdate();
-  }, [championData]);
-
   return (
     <div>
-      <h1>guesser component</h1>
-      {championData && (
-        <Champion
-          championIcon={championIcon}
-          xPixels={xPixels}
-          yPixels={yPixels}
-        />
-      )}
-      <button onClick={newChampion}>skip</button>
+      <div>
+        <h1>guesser component</h1>
+        <button onClick={newChampion}>skip</button>
+        <br />
+
+        {loading ? (
+          <p>loading...</p>
+        ) : (
+          <Champion
+            championIcon={champion?.icon}
+            xPixels={xPixels}
+            yPixels={yPixels}
+          />
+        )}
+      </div>
+
       <p>setXPixels: {xPixels}</p>
       <input
         type="range"
