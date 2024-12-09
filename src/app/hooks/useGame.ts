@@ -62,7 +62,6 @@ export const useGame = () => {
   };
 
   useEffect(() => {
-    console.log("championQueue", championQueue);
     if (championQueue.length === 0) {
       setLoading(true);
     } else {
@@ -70,20 +69,19 @@ export const useGame = () => {
     }
   }, [championQueue]);
 
+  const preloadChampions = async () => {
+    for (let i = 0; i < 5; i++) {
+      await loadChampion();
+    }
+  };
+
   useEffect(() => {
-    const preloadChampions = async () => {
-      for (let i = 0; i < 5; i++) {
-        await loadChampion();
-      }
-    };
     preloadChampions();
   }, []);
 
   useEffect(() => {
-    console.log("loading", loading);
-
     if (!loading) {
-      if (isNextQueue) {
+      if (isNextQueue && championQueue.length > 0) {
         const nextChampion = championQueue.shift();
 
         setChampionQueue([...championQueue]);
@@ -92,12 +90,16 @@ export const useGame = () => {
         loadChampion();
         setIsNextQueue(false);
       }
-    } else {
-      console.log("we are loading up in thsi bitch you cant do that");
     }
-  }, [loading, isNextQueue]);
+  }, [loading, isNextQueue, championQueue]);
 
   const newChampion = () => {
+    setIsNextQueue(true);
+  };
+
+  const resetChamps = () => {
+    setChampionQueue([]);
+    preloadChampions();
     setIsNextQueue(true);
   };
 
@@ -105,5 +107,6 @@ export const useGame = () => {
     champion,
     newChampion,
     loading,
+    resetChamps,
   };
 };

@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/data/championIcons/index.js", "app/page.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/data/championIcons/index.js", "app/page.tsx", "src/app/components/Slider.jsx"],
   "exclude": ["node_modules"]
 }

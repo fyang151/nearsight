@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import { useGame } from "../hooks/useGame";
 
-import { ChampionIcon } from "../components/Champion";
-
 const ChampionGuesser = () => {
   const { champion, newChampion, loading } = useGame();
 
@@ -35,22 +33,24 @@ const ChampionGuesser = () => {
   return (
     <div>
       <div>
-        <h1>guesser component</h1>
         <button onClick={newChampion}>skip</button>
         <br />
 
-        {loading ? (
-          <p>loading...</p>
-        ) : (
-          <ChampionIcon
-            championIcon={champion?.icon}
-            xPixels={xPixels}
-            yPixels={yPixels}
-          />
-        )}
+        {loading ? <p>loading...</p> : <img src={champion?.icon} />}
       </div>
 
-      <p>setXPixels: {xPixels}</p>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Guess the Champion!
+          <input
+            type="text"
+            value={guess || ""}
+            onChange={(event) => setGuess(event.target.value)}
+          />
+        </label>
+      </form>
+
+      {/* <p>setXPixels: {xPixels}</p>
       <input
         type="range"
         min="1"
@@ -65,17 +65,8 @@ const ChampionGuesser = () => {
         max="24"
         value={yPixels}
         onChange={(event) => setYPixels(Number(event.target.value))}
-      />
-      <form onSubmit={handleSubmit}>
-        <label>
-          Guess the Champion!
-          <input
-            type="text"
-            value={guess || ""}
-            onChange={(event) => setGuess(event.target.value)}
-          />
-        </label>
-      </form>
+      /> */}
+      <br />
     </div>
   );
 };
