@@ -16,7 +16,12 @@ type Champion = {
   icon: string;
 };
 
-export const useGame = () => {
+interface useGameProps {
+  xPixels: number;
+  yPixels: number;
+}
+
+export const useGame = ({ xPixels, yPixels }: useGameProps) => {
   const [champion, setChampion] = useState<Champion | undefined>(undefined);
 
   const [championQueue, setChampionQueue] = useState<Champion[]>([]);
@@ -24,12 +29,9 @@ export const useGame = () => {
 
   const [loading, setLoading] = useState<boolean>(true);
 
-  const pixelateImage = async (
-    image: any,
-    xPixels: number,
-    yPixels: number
-  ) => {
-    // just a placeholder for now
+  const pixelateImage = async (image: any) => {
+    console.log('xPixels', xPixels);
+    console.log('yPixels', yPixels);
     const pixelatedChampionNew = await Pixyelator.toDataURL(
       image,
       xPixels,
@@ -47,11 +49,7 @@ export const useGame = () => {
     const selectedChampionIcon = (championIcons as ChampionIcons)[
       currentChampion.id
     ].default.src;
-    const pixelatedChampionIcon = await pixelateImage(
-      selectedChampionIcon,
-      3,
-      3
-    );
+    const pixelatedChampionIcon = await pixelateImage(selectedChampionIcon);
 
     const newChampion = {
       info: currentChampion,

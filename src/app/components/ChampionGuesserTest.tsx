@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 import { useGame } from "../hooks/useGame";
 
 const ChampionGuesser = () => {
-  const { champion, newChampion, loading } = useGame();
-
   const [guess, setGuess] = useState("");
 
   const [xPixels, setXPixels] = useState(3);
   const [yPixels, setYPixels] = useState(3);
+
+  const { champion, newChampion, loading } = useGame({ xPixels, yPixels });
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
@@ -50,7 +50,7 @@ const ChampionGuesser = () => {
         </label>
       </form>
 
-      {/* <p>setXPixels: {xPixels}</p>
+      <p>setXPixels: {xPixels}</p>
       <input
         type="range"
         min="1"
@@ -65,7 +65,7 @@ const ChampionGuesser = () => {
         max="24"
         value={yPixels}
         onChange={(event) => setYPixels(Number(event.target.value))}
-      /> */}
+      />
       <br />
     </div>
   );
