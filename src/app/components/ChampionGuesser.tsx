@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useGame } from "../hooks/useGame";
 
-import { Pixyelator } from "../commands/pixyelator";
+// import { Pixyelator } from "../commands/pixyelator";
+import Settings from "./Settings";
 
 const ChampionGuesser = () => {
   const [guess, setGuess] = useState("");
@@ -13,7 +14,7 @@ const ChampionGuesser = () => {
 
   const [score, setScore] = useState(0);
 
-  const [isSettings, setIsSettings] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const { champion, newChampion, loading, resetChamps } = useGame({
     xPixels,
@@ -46,7 +47,7 @@ const ChampionGuesser = () => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }, []);
+  }, [showSettings]);
 
   const reset = () => {
     setScore(0);
@@ -55,11 +56,7 @@ const ChampionGuesser = () => {
 
   // TODO: this doesnt actually control the settings tab lol, refactor to make code clearer
   const toggleSettings = () => {
-    setIsSettings((prev) => !prev);
-  };
-
-  const pixelateImage = async (image: any) => {
-    await Pixyelator.toDataURL(image, xPixels, yPixels);
+    setShowSettings((prev) => !prev);
   };
 
   return (
@@ -100,32 +97,23 @@ const ChampionGuesser = () => {
             className="mt-8 text-5xl focus:outline-none w-full"
           />
         </form>
-        {isSettings && (
+        {showSettings && (
           <div
             className="fixed inset-0 bg-black bg-opacity-50 z-1"
             onClick={toggleSettings}
           ></div>
         )}
+        {/* Learn how to center a div, or you might write code that looks like this too. */}
         <div
           popover="auto"
           id="settings"
           className="w-[70vw] h-[70vh] rounded-md bg-white p-4 z-2"
         >
-          <p>setXPixels: {xPixels}</p>
-          <input
-            type="range"
-            min="1"
-            max="24"
-            value={xPixels}
-            onChange={(event) => setXPixels(Number(event.target.value))}
-          />
-          <p>setYPixels: {yPixels}</p>
-          <input
-            type="range"
-            min="1"
-            max="24"
-            value={yPixels}
-            onChange={(event) => setYPixels(Number(event.target.value))}
+          <Settings
+            xPixels={xPixels}
+            yPixels={yPixels}
+            setXPixels={setXPixels}
+            setYPixels={setYPixels}
           />
         </div>
       </div>

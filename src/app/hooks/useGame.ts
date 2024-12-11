@@ -30,8 +30,6 @@ export const useGame = ({ xPixels, yPixels }: useGameProps) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const pixelateImage = async (image: any) => {
-    console.log('xPixels', xPixels);
-    console.log('yPixels', yPixels);
     const pixelatedChampionNew = await Pixyelator.toDataURL(
       image,
       xPixels,
