@@ -107,7 +107,6 @@ const ChampionGuesser = () => {
         <div
           popover="auto"
           id="settings"
-          className="w-[70vw] h-[70vh] rounded-md bg-white p-4 z-2"
         >
           <Settings
             xPixels={xPixels}

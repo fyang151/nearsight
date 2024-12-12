@@ -81,8 +81,12 @@ function convertToImageElement(image) {
   }
 }
 
-function convertToOutputType(canvas, OutputType) {
-  switch (OutputType) {
+function convertToOutputType(canvas, outputType) {
+  switch (outputType) {
+    case null:
+      return;
+    case "element":
+      return canvas;
     case "blob":
       return canvasToBlob(canvas);
     case "dataURL":
@@ -94,26 +98,114 @@ function convertToOutputType(canvas, OutputType) {
   }
 }
 
+/**
+ * @typedef {Object} ConvertOptions
+ * @property {*} imgInput - The image input to convert.
+ * @property {number} xPixels - The width in pixels.
+ * @property {number} yPixels - The height in pixels.
+ * @property {number|null} [maxWorkers=null] - The maximum number of workers to use.
+ * @property {string|null} [customCanvasId=null] - The ID of the custom canvas to use.
+ */
+
 export class Pixyelator {
-  static toElement(imgInput, xPixels, yPixels, OutputType, maxWorkers) {
-    return this.fromElement(imgInput, xPixels, yPixels, OutputType, maxWorkers);
+  /**
+   * No Output
+   * @param {ConvertOptions} options - The options for conversion.
+   */
+  static convert({
+    imgInput,
+    xPixels,
+    yPixels,
+    maxWorkers = null,
+    customCanvasId = null,
+  }) {
+    this.fromElement(
+      imgInput,
+      xPixels,
+      yPixels,
+      null,
+      maxWorkers,
+      customCanvasId
+    );
   }
 
-  static toBlob(imgInput, xPixels, yPixels, maxWorkers) {
-    return this.fromElement(imgInput, xPixels, yPixels, "blob", maxWorkers);
+  /**
+   * @param {ConvertOptions} options - The options for conversion.
+   */
+  static toElement({
+    imgInput,
+    xPixels,
+    yPixels,
+    maxWorkers = null,
+    customCanvasId = null,
+  }) {
+    return this.fromElement(
+      imgInput,
+      xPixels,
+      yPixels,
+      "element",
+      maxWorkers,
+      customCanvasId
+    );
   }
 
-  static toDataURL(imgInput, xPixels, yPixels, maxWorkers) {
-    return this.fromElement(imgInput, xPixels, yPixels, "dataURL", maxWorkers);
+  /**
+   * @param {ConvertOptions} options - The options for conversion.
+   */
+  static toBlob({
+    imgInput,
+    xPixels,
+    yPixels,
+    maxWorkers = null,
+    customCanvasId = null,
+  }) {
+    return this.fromElement(
+      imgInput,
+      xPixels,
+      yPixels,
+      "blob",
+      maxWorkers,
+      customCanvasId
+    );
   }
 
-  static toArrayBuffer(imgInput, xPixels, yPixels, maxWorkers) {
+  /**
+   * @param {ConvertOptions} options - The options for conversion.
+   */
+  static toDataURL({
+    imgInput,
+    xPixels,
+    yPixels,
+    maxWorkers = null,
+    customCanvasId = null,
+  }) {
+    return this.fromElement(
+      imgInput,
+      xPixels,
+      yPixels,
+      "dataURL",
+      maxWorkers,
+      customCanvasId
+    );
+  }
+
+  /**
+   * @param {ConvertOptions} options - The options for conversion.
+   */
+  static toArrayBuffer({
+    imgInput,
+    xPixels,
+    yPixels,
+    maxWorkers = null,
+    customCanvasId = null,
+  }) {
     return this.fromElement(
       imgInput,
       xPixels,
       yPixels,
       "arrayBuffer",
-      maxWorkers
+      maxWorkers,
+      customCanvasId
     );
   }
 
@@ -121,8 +213,9 @@ export class Pixyelator {
     imgInput,
     xPixels,
     yPixels,
-    OutputType,
-    maxWorkers = null
+    outputType,
+    maxWorkers,
+    customCanvasId
   ) {
     const imgElement = await convertToImageElement(imgInput);
 
@@ -139,9 +232,10 @@ export class Pixyelator {
       height,
       xPixels,
       yPixels,
-      maxWorkers
+      maxWorkers,
+      customCanvasId
     );
-    return convertToOutputType(displayCanvas, OutputType);
+    return convertToOutputType(displayCanvas, outputType);
   }
 
   static _pixelateElement(
@@ -150,7 +244,8 @@ export class Pixyelator {
     height,
     xPixels,
     yPixels,
-    maxWorkers
+    maxWorkers,
+    customCanvasId
   ) {
     return new Promise((resolve) => {
       if (xPixels > width || yPixels > height) {
@@ -158,7 +253,14 @@ export class Pixyelator {
         return;
       }
 
-      const displayCanvas = document.createElement("canvas");
+      let displayCanvas = "";
+
+      if (customCanvasId) {
+        displayCanvas = document.getElementById(customCanvasId);
+      } else {
+        displayCanvas = document.createElement("canvas");
+      }
+
       const displayCtx = displayCanvas.getContext("2d");
 
       displayCanvas.width = width;
