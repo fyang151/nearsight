@@ -1,4 +1,4 @@
-import { ReactEventHandler, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Pixyelator } from "../commands/pixyelator";
 
 interface SettingsProps {
@@ -8,12 +8,18 @@ interface SettingsProps {
   setYPixels: (yPixels: number) => void;
 }
 
+const getPixelationValue = (x: number) => {
+  return Math.floor(0.000000123 * Math.pow(x, 3) + 1);
+};
+
 const Settings = ({
   xPixels,
   yPixels,
   setXPixels,
   setYPixels,
 }: SettingsProps) => {
+  const [testValue, setTestValue] = useState(0);
+
   useEffect(() => {
     const pixelateImage = async (image: any) => {
       await Pixyelator.convert({
@@ -34,8 +40,9 @@ const Settings = ({
   };
 
   return (
-    <div className="flex flex-col justify-center w-[60vh] h-[80vh] rounded-md bg-white p-4 z-2">
-      <div className="m-4">
+    // <div className="bg-white rounded-md flex flex-col justify-center w-[60vh] h-[80vh] p-4">
+    <div className="flex justify-center w-full h-full gap-4 p-4">
+      <div>
         <p>set Both: {xPixels}</p>
         <input
           type="range"
@@ -60,7 +67,16 @@ const Settings = ({
           value={yPixels}
           onChange={(event) => setYPixels(Number(event.target.value))}
         />
+        <p>test: {getPixelationValue(testValue)}</p>
+        <input
+          type="range"
+          min="0"
+          max="1000"
+          value={testValue}
+          onChange={(event) => setTestValue(Number(event.target.value))}
+        />
       </div>
+      {/* <div className="w-full h-full bg-purple-900">hi</div> */}
       <canvas id="demo"></canvas>
     </div>
   );

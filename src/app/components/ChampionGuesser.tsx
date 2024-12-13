@@ -95,6 +95,11 @@ const ChampionGuesser = () => {
             onChange={(event) => setGuess(event.target.value)}
             ref={inputRef}
             className="mt-8 text-5xl focus:outline-none w-full"
+            onBlur={() => {
+              if (inputRef.current) {
+                inputRef.current.focus();
+              }
+            }}
           />
         </form>
         {showSettings && (
@@ -107,6 +112,7 @@ const ChampionGuesser = () => {
         <div
           popover="auto"
           id="settings"
+          className="rounded-md w-[120vh] h-[80vh]"
         >
           <Settings
             xPixels={xPixels}
