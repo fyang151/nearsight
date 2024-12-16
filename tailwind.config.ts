@@ -11,6 +11,13 @@ export default {
       fontFamily: {
         Inter: ["Inter", "serif"],
       },
+      colors: {
+        settings: {
+          accentDisabled: "var(--color-disabled)",
+          accentOne: "var(--color-accent-1)",
+          accentTwo: "var(--color-accent-2)"
+        },
+      },
     },
   },
   plugins: [],

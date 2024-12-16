@@ -3,3 +3,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --color-disabled: #cccccc;
+  --color-accent-1: #ec9f2d;
+  --color-accent-2: #e76f51;
+}

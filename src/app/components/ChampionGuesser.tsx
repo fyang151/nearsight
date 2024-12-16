@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useGame } from "../hooks/useGame";
 
-// import { Pixyelator } from "../commands/pixyelator";
 import Settings from "./Settings";
 
 const ChampionGuesser = () => {
@@ -43,10 +42,17 @@ const ChampionGuesser = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
+  const handleFocus = () => {
+    if (!showSettings) {
+      inputRef.current?.focus();
     }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleFocus);
+    return () => {
+      document.removeEventListener("click", handleFocus);
+    };
   }, [showSettings]);
 
   const reset = () => {
@@ -54,20 +60,31 @@ const ChampionGuesser = () => {
     resetChamps();
   };
 
-  // TODO: this doesnt actually control the settings tab lol, refactor to make code clearer
   const toggleSettings = () => {
-    setShowSettings((prev) => !prev);
+    setShowSettings((prev) => {
+      const newValue = !prev;
+      if (!newValue) {
+        inputRef.current?.focus();
+        reset();
+      }
+      return newValue;
+    });
   };
 
   return (
     <div className="flex flex-row w-[80vw] gap-4">
       {/* <div className="h-[calc(100vh-56px)]"> */}
       <div className="h-[90vh]">
-        <img
-          src={loading ? "/joe.webp" : champion?.icon}
-          className="object-contain h-full max-w-[75vw] rounded-2xl"
-          style={{ imageRendering: "pixelated" }}
-        />
+        {loading ? (
+          <div className="h-full max-w-[75vw] rounded-2xl">Loading</div>
+        ) : (
+          <img
+            src={champion?.icon}
+            className="object-contain h-full max-w-[75vw] rounded-2xl"
+            style={{ imageRendering: "pixelated" }}
+            draggable="false"
+          />
+        )}
       </div>
       <div className="w-full">
         <div className="flex flex-row justify-between w-full p-2 font-light text-2xl">
@@ -95,11 +112,6 @@ const ChampionGuesser = () => {
             onChange={(event) => setGuess(event.target.value)}
             ref={inputRef}
             className="mt-8 text-5xl focus:outline-none w-full"
-            onBlur={() => {
-              if (inputRef.current) {
-                inputRef.current.focus();
-              }
-            }}
           />
         </form>
         {showSettings && (
