@@ -16,8 +16,8 @@ const Settings = ({
   setXPixels,
   setYPixels,
 }: SettingsProps) => {
-  const [bothSliderDisabled, setBothSliderDisabled] = useState<boolean>(true);
-  const [bothPixels, setBothPixels] = useState<number>(0);
+  const [bothSliderDisabled, setBothSliderDisabled] = useState<boolean>(false);
+  const [bothPixels, setBothPixels] = useState<number>(3);
 
   // we need this to seperate the input and actual value, because we allow users to input value outside of the range
   const [bothPixelsInput, setBothPixelsInput] = useState<string>(

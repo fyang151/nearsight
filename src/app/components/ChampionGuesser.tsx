@@ -90,38 +90,9 @@ const ChampionGuesser = () => {
     });
   };
 
-  // displaying image
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [containerSize, setContainerSize] = useState(0);
-
-  useEffect(() => {
-    const updateSize = () => {
-      if (containerRef.current) {
-        const width = containerRef.current?.offsetWidth;
-        const height = containerRef.current?.offsetHeight;
-
-        setContainerSize(Math.min(width - 350, height));
-      }
-    };
-
-    updateSize();
-    window.addEventListener("resize", updateSize);
-    return () => window.removeEventListener("resize", updateSize);
-  }, []);
-
   return (
-    <div
-      ref={containerRef}
-      className="flex justify-center items-center gap-4 w-[90vw] h-[calc(95vh-56px)]"
-    >
-      <div
-        style={{
-          display: "flex",
-          width: `${containerSize}px`,
-          height: `${containerSize}px`,
-        }}
-      >
+    <div className="flex justify-center items-center gap-4 w-[90vw] h-[calc(95vh-56px)]">
+      <div className="w-[calc(min(90vw-350px,95vh-56px))] h-[calc(min(90vw-350px,95vh-56px))]">
         {loading ? (
           <div className="aspect-square flex items-center justify-center">
             <span className={styles.loader} />
@@ -129,7 +100,7 @@ const ChampionGuesser = () => {
         ) : (
           <img
             src={champion?.icon}
-            className="rounded-2xl"
+            className="w-full h-full rounded-2xl"
             style={{ imageRendering: "pixelated" }}
             draggable="false"
           />
@@ -153,7 +124,7 @@ const ChampionGuesser = () => {
             </button>
           </div>
         </div>
-        <div className="italic text-6xl">Who is this champion?</div>
+        <div className="italic text-7xl">Who is this champion?</div>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
