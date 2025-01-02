@@ -15,7 +15,7 @@ export default {
         settings: {
           accentDisabled: "var(--color-disabled)",
           accentOne: "var(--color-accent-1)",
-          accentTwo: "var(--color-accent-2)"
+          accentTwo: "var(--color-accent-2)",
         },
       },
     },

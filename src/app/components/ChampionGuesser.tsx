@@ -5,6 +5,8 @@ import { useGame } from "../hooks/useGame";
 
 import Settings from "./Settings";
 
+import styles from "./ChampionGuesser.module.css";
+
 const ChampionGuesser = () => {
   const [guess, setGuess] = useState("");
 
@@ -55,6 +57,23 @@ const ChampionGuesser = () => {
     };
   }, [showSettings]);
 
+  useEffect(() => {
+    handleFocus();
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && showSettings) {
+        toggleSettings();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showSettings]);
+
   const reset = () => {
     setScore(0);
     resetChamps();
@@ -71,22 +90,52 @@ const ChampionGuesser = () => {
     });
   };
 
+  // displaying image
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerSize, setContainerSize] = useState(0);
+
+  useEffect(() => {
+    const updateSize = () => {
+      if (containerRef.current) {
+        const width = containerRef.current?.offsetWidth;
+        const height = containerRef.current?.offsetHeight;
+
+        setContainerSize(Math.min(width - 350, height));
+      }
+    };
+
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+
   return (
-    <div className="flex flex-row w-[80vw] gap-4">
-      {/* <div className="h-[calc(100vh-56px)]"> */}
-      <div className="h-[90vh]">
+    <div
+      ref={containerRef}
+      className="flex justify-center items-center gap-4 w-[90vw] h-[calc(95vh-56px)]"
+    >
+      <div
+        style={{
+          display: "flex",
+          width: `${containerSize}px`,
+          height: `${containerSize}px`,
+        }}
+      >
         {loading ? (
-          <div className="h-full max-w-[75vw] rounded-2xl">Loading</div>
+          <div className="aspect-square flex items-center justify-center">
+            <span className={styles.loader} />
+          </div>
         ) : (
           <img
             src={champion?.icon}
-            className="object-contain h-full max-w-[75vw] rounded-2xl"
+            className="rounded-2xl"
             style={{ imageRendering: "pixelated" }}
             draggable="false"
           />
         )}
       </div>
-      <div className="w-full">
+      <div className="w-[350px] h-full">
         <div className="flex flex-row justify-between w-full p-2 font-light text-2xl">
           <div>SCORE: {score}</div>
           <div className="flex flex-row gap-4 items-center relative">
@@ -114,25 +163,25 @@ const ChampionGuesser = () => {
             className="mt-8 text-5xl focus:outline-none w-full"
           />
         </form>
-        {showSettings && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-1"
-            onClick={toggleSettings}
-          ></div>
-        )}
-        {/* Learn how to center a div, or you might write code that looks like this too. */}
+      </div>
+      {showSettings && (
         <div
-          popover="auto"
-          id="settings"
-          className="rounded-md w-[120vh] h-[80vh]"
-        >
-          <Settings
-            xPixels={xPixels}
-            yPixels={yPixels}
-            setXPixels={setXPixels}
-            setYPixels={setYPixels}
-          />
-        </div>
+          className="fixed inset-0 bg-black bg-opacity-50 z-1"
+          onClick={toggleSettings}
+        ></div>
+      )}
+      {/* Learn how to center a div, or you might write code that looks like this too. */}
+      <div
+        popover="auto"
+        id="settings"
+        className="rounded-md w-[120vh] h-[80vh]"
+      >
+        <Settings
+          xPixels={xPixels}
+          yPixels={yPixels}
+          setXPixels={setXPixels}
+          setYPixels={setYPixels}
+        />
       </div>
     </div>
   );

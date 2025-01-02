@@ -56,6 +56,8 @@ const Settings = ({
   };
 
   const handleChangeBothInput = (value: string) => {
+    setBothPixelsInput(String(value));
+
     const numValue = Number(value);
 
     if (1 <= numValue && numValue <= 10) {
@@ -64,9 +66,9 @@ const Settings = ({
       handleChangeBoth(1);
     } else if (numValue > 10) {
       handleChangeBoth(10);
-    } else {
-      setBothPixelsInput(value);
     }
+
+    setBothSliderDisabled(false);
   };
 
   const handleChangeXInput = (value: string) => {
@@ -81,6 +83,8 @@ const Settings = ({
     } else if (numValue > 10) {
       setXPixels(10);
     }
+
+    setBothSliderDisabled(true);
   };
 
   const handleChangeYInput = (value: string) => {
@@ -95,6 +99,8 @@ const Settings = ({
     } else if (numValue > 10) {
       setYPixels(10);
     }
+
+    setBothSliderDisabled(true);
   };
 
   useEffect(() => {
@@ -115,13 +121,14 @@ const Settings = ({
       className={` ${styles.inputWrapper} flex justify-center w-full h-full gap-4 p-4 select-none`}
     >
       <div className="flex flex-col gap-4 w-full">
+        Set the pixels!
         <div className="flex">
           <h1
-            className={`flex w-[100px] justify-end mr-4 ${
+            className={`flex w-[80px] justify-end mr-4 ${
               bothSliderDisabled && "text-settings-accentDisabled"
             }`}
           >
-            Hello
+            Both
           </h1>
           <input
             type="text"
@@ -129,7 +136,9 @@ const Settings = ({
             onFocus={() => {
               setBothPixelsInput("");
             }}
-            onBlur={() => bothPixelsInput}
+            onBlur={() => {
+              setBothPixelsInput(String(bothPixels));
+            }}
             onChange={(event) => handleChangeBothInput(event.target.value)}
             className={`${bothSliderDisabled && styles.disabled}`}
           />
@@ -139,19 +148,22 @@ const Settings = ({
           min="1"
           max="10"
           value={bothPixels}
-          onFocus={() => setBothSliderDisabled(false)}
+          onFocus={() => {
+            setBothSliderDisabled(false);
+            setBothPixelsInput(String(bothPixels));
+          }}
           onChange={(event) => handleChangeBoth(Number(event.target.value))}
           className={`${bothSliderDisabled && styles.disabled}`}
         />
         <div className="flex">
-          <h1 className="flex w-[100px] justify-end mr-4 text-settings-accentOne">
-            Hello
+          <h1 className="flex w-[80px] justify-end mr-4 text-settings-accentOne">
+            Horizontal
           </h1>
           <input
             type="text"
             value={xPixelsInput}
             onFocus={() => setXPixelsInput("")}
-            onBlur={() => xPixelsInput}
+            onBlur={() => setXPixelsInput(String(xPixels))}
             onChange={(event) => handleChangeXInput(event.target.value)}
             className={styles.x}
           />
@@ -165,14 +177,14 @@ const Settings = ({
           className={styles.x}
         />
         <div className="flex">
-          <h1 className="flex w-[100px] justify-end mr-4 text-settings-accentTwo">
-            Hello
+          <h1 className="flex w-[80px] justify-end mr-4 text-settings-accentTwo">
+            Vertical
           </h1>
           <input
             type="text"
             value={yPixelsInput}
             onFocus={() => setYPixelsInput("")}
-            onBlur={() => yPixelsInput}
+            onBlur={() => setYPixelsInput(String(yPixels))}
             onChange={(event) => handleChangeYInput(event.target.value)}
             className={styles.y}
           />
