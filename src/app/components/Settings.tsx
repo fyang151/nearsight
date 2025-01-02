@@ -8,6 +8,8 @@ interface SettingsProps {
   yPixels: number;
   setXPixels: (xPixels: number) => void;
   setYPixels: (yPixels: number) => void;
+  isGrayScale: boolean;
+  setIsGrayScale: (isGrayScale: boolean) => void;
 }
 
 const Settings = ({
@@ -15,7 +17,10 @@ const Settings = ({
   yPixels,
   setXPixels,
   setYPixels,
+  isGrayScale,
+  setIsGrayScale,
 }: SettingsProps) => {
+  // pixels slider
   const [bothSliderDisabled, setBothSliderDisabled] = useState<boolean>(false);
   const [bothPixels, setBothPixels] = useState<number>(3);
 
@@ -103,25 +108,32 @@ const Settings = ({
     setBothSliderDisabled(true);
   };
 
+  // setting isGrayScale
+
+  const handleIsGrayScaleChecked = () => {
+    setIsGrayScale(!isGrayScale);
+  };
+
   useEffect(() => {
+    console.log("isGrayScale", isGrayScale);
     const pixelateImage = async (image: any) => {
       await Pixyelator.convert({
         imgInput: image,
         xPixels: xPixels,
         yPixels: yPixels,
         customCanvasId: "demo",
+        isGrayScale: isGrayScale,
       });
     };
 
     pixelateImage("/mePlaceholder.jpg");
-  }, [xPixels, yPixels]);
+  }, [xPixels, yPixels, isGrayScale]);
 
   return (
     <div
       className={` ${styles.inputWrapper} flex justify-center w-full h-full gap-4 p-4 select-none`}
     >
       <div className="flex flex-col gap-4 w-full">
-        Set the pixels!
         <div className="flex">
           <h1
             className={`flex w-[80px] justify-end mr-4 ${
@@ -197,6 +209,14 @@ const Settings = ({
           onChange={(event) => handleChangeY(Number(event.target.value))}
           className={styles.y}
         />
+        <label>
+          <input
+            type="checkbox"
+            checked={isGrayScale}
+            onChange={handleIsGrayScaleChecked}
+          />
+          make it gray
+        </label>
       </div>
       <canvas id="demo" />
     </div>

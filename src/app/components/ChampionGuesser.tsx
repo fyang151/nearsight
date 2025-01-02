@@ -12,6 +12,7 @@ const ChampionGuesser = () => {
 
   const [xPixels, setXPixels] = useState(3);
   const [yPixels, setYPixels] = useState(3);
+  const [isGrayScale, setIsGrayScale] = useState<boolean>(false);
 
   const [score, setScore] = useState(0);
 
@@ -20,6 +21,7 @@ const ChampionGuesser = () => {
   const { champion, newChampion, loading, resetChamps } = useGame({
     xPixels,
     yPixels,
+    isGrayScale,
   });
 
   const handleSubmit = (event: any) => {
@@ -152,6 +154,8 @@ const ChampionGuesser = () => {
           yPixels={yPixels}
           setXPixels={setXPixels}
           setYPixels={setYPixels}
+          isGrayScale={isGrayScale}
+          setIsGrayScale={setIsGrayScale}
         />
       </div>
     </div>

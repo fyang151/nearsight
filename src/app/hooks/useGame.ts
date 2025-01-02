@@ -19,9 +19,10 @@ type Champion = {
 interface useGameProps {
   xPixels: number;
   yPixels: number;
+  isGrayScale: boolean;
 }
 
-export const useGame = ({ xPixels, yPixels }: useGameProps) => {
+export const useGame = ({ xPixels, yPixels, isGrayScale }: useGameProps) => {
   const [champion, setChampion] = useState<Champion | undefined>(undefined);
 
   const [championQueue, setChampionQueue] = useState<Champion[]>([]);
@@ -34,6 +35,7 @@ export const useGame = ({ xPixels, yPixels }: useGameProps) => {
       imgInput: image,
       xPixels: xPixels,
       yPixels: yPixels,
+      isGrayScale: isGrayScale,
     };
 
     const pixelatedChampionNew = await Pixyelator.toDataURL(input);

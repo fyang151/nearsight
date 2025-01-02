@@ -105,6 +105,7 @@ function convertToOutputType(canvas, outputType) {
  * @property {number} yPixels - The height in pixels.
  * @property {number|null} [maxWorkers=null] - The maximum number of workers to use.
  * @property {string|null} [customCanvasId=null] - The ID of the custom canvas to use.
+ * @property {boolean|null} [isGrayScale=null] - Make this thing gray!!
  */
 
 export class Pixyelator {
@@ -118,6 +119,7 @@ export class Pixyelator {
     yPixels,
     maxWorkers = null,
     customCanvasId = null,
+    isGrayScale = false
   }) {
     this.fromElement(
       imgInput,
@@ -125,7 +127,8 @@ export class Pixyelator {
       yPixels,
       null,
       maxWorkers,
-      customCanvasId
+      customCanvasId,
+      isGrayScale
     );
   }
 
@@ -138,6 +141,7 @@ export class Pixyelator {
     yPixels,
     maxWorkers = null,
     customCanvasId = null,
+    isGrayScale = false
   }) {
     return this.fromElement(
       imgInput,
@@ -145,7 +149,8 @@ export class Pixyelator {
       yPixels,
       "element",
       maxWorkers,
-      customCanvasId
+      customCanvasId,
+      isGrayScale
     );
   }
 
@@ -158,6 +163,7 @@ export class Pixyelator {
     yPixels,
     maxWorkers = null,
     customCanvasId = null,
+    isGrayScale = false
   }) {
     return this.fromElement(
       imgInput,
@@ -165,7 +171,8 @@ export class Pixyelator {
       yPixels,
       "blob",
       maxWorkers,
-      customCanvasId
+      customCanvasId,
+      isGrayScale
     );
   }
 
@@ -178,6 +185,7 @@ export class Pixyelator {
     yPixels,
     maxWorkers = null,
     customCanvasId = null,
+    isGrayScale = false
   }) {
     return this.fromElement(
       imgInput,
@@ -185,7 +193,8 @@ export class Pixyelator {
       yPixels,
       "dataURL",
       maxWorkers,
-      customCanvasId
+      customCanvasId,
+      isGrayScale
     );
   }
 
@@ -198,6 +207,7 @@ export class Pixyelator {
     yPixels,
     maxWorkers = null,
     customCanvasId = null,
+    isGrayScale = false,
   }) {
     return this.fromElement(
       imgInput,
@@ -205,7 +215,8 @@ export class Pixyelator {
       yPixels,
       "arrayBuffer",
       maxWorkers,
-      customCanvasId
+      customCanvasId,
+      isGrayScale
     );
   }
 
@@ -215,7 +226,8 @@ export class Pixyelator {
     yPixels,
     outputType,
     maxWorkers,
-    customCanvasId
+    customCanvasId,
+    isGrayScale
   ) {
     const imgElement = await convertToImageElement(imgInput);
 
@@ -233,7 +245,8 @@ export class Pixyelator {
       xPixels,
       yPixels,
       maxWorkers,
-      customCanvasId
+      customCanvasId,
+      isGrayScale
     );
     return convertToOutputType(displayCanvas, outputType);
   }
@@ -245,7 +258,8 @@ export class Pixyelator {
     xPixels,
     yPixels,
     maxWorkers,
-    customCanvasId
+    customCanvasId,
+    isGrayScale
   ) {
     return new Promise((resolve) => {
       if (xPixels > width || yPixels > height) {
@@ -349,6 +363,7 @@ export class Pixyelator {
               width,
               height,
               outerValue,
+              isGrayScale,
               innerValues,
               shouldAllocateByRows,
             ]);
