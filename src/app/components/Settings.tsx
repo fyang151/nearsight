@@ -209,13 +209,13 @@ const Settings = ({
           onChange={(event) => handleChangeY(Number(event.target.value))}
           className={styles.y}
         />
-        <label>
+        <label className="gap-4 flex mt-10">
           <input
             type="checkbox"
             checked={isGrayScale}
             onChange={handleIsGrayScaleChecked}
           />
-          make it gray
+          Grayscale
         </label>
       </div>
       <canvas id="demo" />
