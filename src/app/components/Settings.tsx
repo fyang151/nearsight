@@ -24,7 +24,7 @@ const Settings = ({
   const [bothSliderDisabled, setBothSliderDisabled] = useState<boolean>(false);
   const [bothPixels, setBothPixels] = useState<number>(3);
 
-  // we need this to seperate the input and actual value, because we allow users to input value outside of the range
+  // we need this to seperate the input and actual value, because we allow users to type in values outside of the range
   const [bothPixelsInput, setBothPixelsInput] = useState<string>(
     String(bothPixels)
   );
@@ -209,7 +209,7 @@ const Settings = ({
           onChange={(event) => handleChangeY(Number(event.target.value))}
           className={styles.y}
         />
-        <label className="gap-4 flex mt-10">
+        <label className="gap-4 flex mt-10 items-center">
           <input
             type="checkbox"
             checked={isGrayScale}

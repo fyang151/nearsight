@@ -115,3 +115,19 @@
 .inputWrapper input[type="range"].y::-ms-thumb {
   background: var(--color-accent-2);
 }
+
+.inputWrapper input[type="checkbox"] {
+  appearance: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid #9ca3af;
+  border-radius: 0.25rem;
+  background-color: #f9fafb;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.inputWrapper input[type="checkbox"]:checked {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
