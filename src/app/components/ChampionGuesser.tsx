@@ -31,14 +31,15 @@ const ChampionGuesser = () => {
   };
 
   const normalizeString = (str: string) => {
-    return str.replace(/[^a-z0-9\s]/gi, "").toLowerCase();
+    return str.replace(/[^a-z0-9]/gi, "").toLowerCase();
   };
 
   useEffect(() => {
     if (
       !loading &&
       champion &&
-      normalizeString(champion.info.name) === guess.toLowerCase()
+      (normalizeString(champion.info.name) === normalizeString(guess) ||
+        normalizeString(champion.info.id) === normalizeString(guess))
     ) {
       setScore((prevScore) => prevScore + 1);
       setGuess("");
