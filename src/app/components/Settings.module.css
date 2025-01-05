@@ -1,6 +1,14 @@
 .inputWrapper input[type="text"] {
   width: 30px;
   text-align: center;
+}
+
+.inputWrapper input[type="text"]:focus {
+  outline: none;
+}
+
+.inputWrapper input[type="text"].both {
+  color: black;
   border: 2px solid black;
 }
 
@@ -14,19 +22,7 @@
   border: 2px solid var(--color-accent-1);
 }
 
-.inputWrapper input[type="text"].x:focus {
-  outline: none;
-  color: var(--color-accent-1);
-  border: 2px solid var(--color-accent-1);
-}
-
 .inputWrapper input[type="text"].y {
-  color: var(--color-accent-2);
-  border: 2px solid var(--color-accent-2);
-}
-
-.inputWrapper input[type="text"].y:focus {
-  outline: none;
   color: var(--color-accent-2);
   border: 2px solid var(--color-accent-2);
 }
@@ -58,9 +54,12 @@
   appearance: none;
   width: 15px;
   height: 15px;
-  background: black;
   border-radius: 50%;
   cursor: pointer;
+}
+
+.inputWrapper input[type="range"].both::-webkit-slider-thumb {
+  background: black;
 }
 
 .inputWrapper input[type="range"].disabled::-webkit-slider-thumb {
@@ -124,10 +123,10 @@
   border-radius: 0.25rem;
   background-color: #f9fafb;
   cursor: pointer;
-  transition: background-color 0.1s ease;
+  transition: background-color 0.1s;
 }
 
 .inputWrapper input[type="checkbox"]:checked {
-  background-color: #2563eb;
-  border-color: #2563eb;
+  background-color: black;
+  border-color: black;
 }

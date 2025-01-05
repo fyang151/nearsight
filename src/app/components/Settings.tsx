@@ -10,6 +10,9 @@ interface SettingsProps {
   setYPixels: (yPixels: number) => void;
   isGrayScale: boolean;
   setIsGrayScale: (isGrayScale: boolean) => void;
+  toggleSettings: () => void;
+  bothPixels: number;
+  setBothPixels: (bothPixels: number) => void;
 }
 
 const Settings = ({
@@ -19,10 +22,11 @@ const Settings = ({
   setYPixels,
   isGrayScale,
   setIsGrayScale,
+  toggleSettings,
+  bothPixels,
+  setBothPixels
 }: SettingsProps) => {
-  // pixels slider
   const [bothSliderDisabled, setBothSliderDisabled] = useState<boolean>(false);
-  const [bothPixels, setBothPixels] = useState<number>(3);
 
   // we need this to seperate the input and actual value, because we allow users to type in values outside of the range
   const [bothPixelsInput, setBothPixelsInput] = useState<string>(
@@ -133,94 +137,116 @@ const Settings = ({
     <div
       className={` ${styles.inputWrapper} flex justify-center w-full h-full gap-4 p-4 select-none`}
     >
-      <div className="flex flex-col gap-4 w-full">
-        <div className="flex">
-          <h1
-            className={`flex w-[80px] justify-end mr-4 ${
-              bothSliderDisabled && "text-settings-accentDisabled"
-            }`}
-          >
-            Both
-          </h1>
-          <input
-            type="text"
-            value={bothPixelsInput}
-            onFocus={() => {
-              setBothPixelsInput("");
-            }}
-            onBlur={() => {
-              setBothPixelsInput(String(bothPixels));
-            }}
-            onChange={(event) => handleChangeBothInput(event.target.value)}
-            className={`${bothSliderDisabled && styles.disabled}`}
-          />
-        </div>
-        <input
-          type="range"
-          min="1"
-          max="10"
-          value={bothPixels}
-          onFocus={() => {
-            setBothSliderDisabled(false);
-            setBothPixelsInput(String(bothPixels));
-          }}
-          onChange={(event) => handleChangeBoth(Number(event.target.value))}
-          className={`${bothSliderDisabled && styles.disabled}`}
+      <div className="relative flex flex-col items-start w-full justify-center">
+        <img
+          src="/back-arrow.svg"
+          onClick={toggleSettings}
+          className="absolute top-0 w-8 h-8 cursor-pointer"
         />
-        <div className="flex">
-          <h1 className="flex w-[80px] justify-end mr-4 text-settings-accentOne">
-            Horizontal
-          </h1>
-          <input
-            type="text"
-            value={xPixelsInput}
-            onFocus={() => setXPixelsInput("")}
-            onBlur={() => setXPixelsInput(String(xPixels))}
-            onChange={(event) => handleChangeXInput(event.target.value)}
-            className={styles.x}
-          />
+        <div className="flex flex-col w-full gap-4">
+          <label className="gap-4 flex items-center">
+            <input
+              type="checkbox"
+              checked={isGrayScale}
+              onChange={handleIsGrayScaleChecked}
+            />
+            Grayscale
+          </label>
+          <div>
+            <div className="flex">
+              <h1 className="flex w-[80px] justify-end mr-4">Both</h1>
+              <input
+                type="text"
+                value={bothPixelsInput}
+                onFocus={() => {
+                  setBothPixelsInput("");
+                }}
+                onBlur={() => {
+                  setBothPixelsInput(String(bothPixels));
+                }}
+                onChange={(event) => handleChangeBothInput(event.target.value)}
+                className={`${
+                  bothSliderDisabled ? styles.disabled : styles.both
+                }`}
+              />
+            </div>
+            <input
+              type="range"
+              min="1"
+              max="10"
+              value={bothPixels}
+              onFocus={() => {
+                setBothSliderDisabled(false);
+                setBothPixelsInput(String(bothPixels));
+              }}
+              onChange={(event) => handleChangeBoth(Number(event.target.value))}
+              className={`${
+                bothSliderDisabled ? styles.disabled : styles.both
+              }`}
+            />
+          </div>
+          <div>
+            <div className="flex">
+              <h1 className="flex w-[80px] justify-end mr-4 text-settings-accentOne">
+                Horizontal
+              </h1>
+              <input
+                type="text"
+                value={xPixelsInput}
+                onFocus={() => setXPixelsInput("")}
+                onBlur={() => setXPixelsInput(String(xPixels))}
+                onChange={(event) => handleChangeXInput(event.target.value)}
+                className={styles.x}
+              />
+            </div>
+            <input
+              type="range"
+              min="1"
+              max="10"
+              value={xPixels}
+              onChange={(event) => handleChangeX(Number(event.target.value))}
+              className={styles.x}
+            />
+          </div>
+          <div>
+            <div className="flex">
+              <h1 className="flex w-[80px] justify-end mr-4 text-settings-accentTwo">
+                Vertical
+              </h1>
+              <input
+                type="text"
+                value={yPixelsInput}
+                onFocus={() => setYPixelsInput("")}
+                onBlur={() => setYPixelsInput(String(yPixels))}
+                onChange={(event) => handleChangeYInput(event.target.value)}
+                className={styles.y}
+              />
+            </div>
+            <input
+              type="range"
+              min="1"
+              max="10"
+              value={yPixels}
+              onChange={(event) => handleChangeY(Number(event.target.value))}
+              className={styles.y}
+            />
+          </div>
         </div>
-        <input
-          type="range"
-          min="1"
-          max="10"
-          value={xPixels}
-          onChange={(event) => handleChangeX(Number(event.target.value))}
-          className={styles.x}
-        />
-        <div className="flex">
-          <h1 className="flex w-[80px] justify-end mr-4 text-settings-accentTwo">
-            Vertical
-          </h1>
-          <input
-            type="text"
-            value={yPixelsInput}
-            onFocus={() => setYPixelsInput("")}
-            onBlur={() => setYPixelsInput(String(yPixels))}
-            onChange={(event) => handleChangeYInput(event.target.value)}
-            className={styles.y}
-          />
-        </div>
-        <input
-          type="range"
-          min="1"
-          max="10"
-          value={yPixels}
-          onChange={(event) => handleChangeY(Number(event.target.value))}
-          className={styles.y}
-        />
-        <label className="gap-4 flex mt-10 items-center">
-          <input
-            type="checkbox"
-            checked={isGrayScale}
-            onChange={handleIsGrayScaleChecked}
-          />
-          Grayscale
-        </label>
       </div>
-      <canvas id="demo" />
+      <canvas id="demo" className="w-full rounded-lg" />
     </div>
   );
 };
+
+interface SliderInputProps {
+  title: string;
+  textFieldValue: string;
+  onFocus: (event: any) => void;
+  onBlur: (event: any) => void;
+  onTextFieldChange: (event: any) => void;
+  rangeFieldValue: number;
+  onRangeFieldChange: (event: any) => void;
+  style: string;
+}
 
 export default Settings;

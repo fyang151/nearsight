@@ -10,8 +10,10 @@ import styles from "./ChampionGuesser.module.css";
 const ChampionGuesser = () => {
   const [guess, setGuess] = useState("");
 
-  const [xPixels, setXPixels] = useState(3);
-  const [yPixels, setYPixels] = useState(3);
+  const [xPixels, setXPixels] = useState(4);
+  const [yPixels, setYPixels] = useState(4);
+  const [bothPixels, setBothPixels] = useState<number>(4);
+
   const [isGrayScale, setIsGrayScale] = useState<boolean>(false);
 
   const [score, setScore] = useState(0);
@@ -93,8 +95,8 @@ const ChampionGuesser = () => {
   };
 
   return (
-    <div className="flex justify-center items-center gap-4 w-[90vw] h-[calc(95vh-56px)]">
-      <div className="w-[calc(min(90vw-350px,95vh-56px))] h-[calc(min(90vw-350px,95vh-56px))]">
+    <div className="flex justify-center items-center gap-4 w-[90vw] h-[calc(95vh-52px)]">
+      <div className="w-[calc(min(90vw-350px,95vh-52px))] h-[calc(min(90vw-350px,95vh-52px))]">
         {loading ? (
           <div className="aspect-square flex items-center justify-center">
             <span className={styles.loader} />
@@ -138,26 +140,30 @@ const ChampionGuesser = () => {
         </form>
       </div>
       {showSettings && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-1"
-          onClick={toggleSettings}
-        ></div>
+        <>
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-1"
+            onClick={toggleSettings}
+          ></div>
+          <div
+            popover="auto"
+            id="settings"
+            className="rounded-md w-[120vh] h-[80vh]"
+          >
+            <Settings
+              xPixels={xPixels}
+              yPixels={yPixels}
+              setXPixels={setXPixels}
+              setYPixels={setYPixels}
+              isGrayScale={isGrayScale}
+              setIsGrayScale={setIsGrayScale}
+              toggleSettings={toggleSettings}
+              bothPixels={bothPixels}
+              setBothPixels={setBothPixels}
+            />
+          </div>
+        </>
       )}
-      {/* Learn how to center a div, or you might write code that looks like this too. */}
-      <div
-        popover="auto"
-        id="settings"
-        className="rounded-md w-[120vh] h-[80vh]"
-      >
-        <Settings
-          xPixels={xPixels}
-          yPixels={yPixels}
-          setXPixels={setXPixels}
-          setYPixels={setYPixels}
-          isGrayScale={isGrayScale}
-          setIsGrayScale={setIsGrayScale}
-        />
-      </div>
     </div>
   );
 };
