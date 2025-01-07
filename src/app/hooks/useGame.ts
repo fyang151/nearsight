@@ -7,8 +7,7 @@ import championIcons from "../data/championIcons";
 import champions from "../data/champions.json";
 
 import { Pixyelator } from "../commands/pixyelator";
-
-type ChampionInfo = any;
+import { ChampionInfo } from "../types/champion";
 
 type ChampionIcons = {
   [key: string]: {
