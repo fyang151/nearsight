@@ -8,6 +8,7 @@ import championIcons from "../data/championIcons";
 import champions from "../data/champions.json";
 
 import { Pixyelator } from "../commands/pixyelator";
+import { ChampionInfo } from "../types/champion";
 
 CHAMPION_PRELOAD_COUNT = Math.min(
   Object.keys(champions).length,
@@ -29,7 +30,7 @@ type ChampionIcons = {
 };
 
 type Champion = {
-  info: any;
+  info: ChampionInfo;
   icon: string;
 };
 
@@ -41,7 +42,7 @@ interface useGameProps {
 
 export const useGame = ({ xPixels, yPixels, isGrayScale }: useGameProps) => {
   const [champion, setChampion] = useState<Champion | undefined>(undefined);
-  const [seenChampions, setSeenChampions] = useState<Champion[]>([]);
+  const [seenChampionIds, setSeenChampionIds] = useState<string[]>([]);
 
   const [championQueue, setChampionQueue] = useState<Champion[]>([]);
   const [isNextQueue, setIsNextQueue] = useState<boolean>(true);
@@ -104,7 +105,7 @@ export const useGame = ({ xPixels, yPixels, isGrayScale }: useGameProps) => {
 
         // sanity check
         if (nextChampion) {
-          if (seenChampions.includes(nextChampion.info.id)) {
+          if (seenChampionIds.includes(nextChampion.info.id)) {
             loadChampion();
           } else {
             setChampionQueue([...championQueue]);
@@ -113,13 +114,13 @@ export const useGame = ({ xPixels, yPixels, isGrayScale }: useGameProps) => {
             loadChampion();
             setIsNextQueue(false);
 
-            if (seenChampions.length > EXCLUDED_PREV_CHAMPION_COUNT - 1) {
-              setSeenChampions((prev) => [
+            if (seenChampionIds.length > EXCLUDED_PREV_CHAMPION_COUNT - 1) {
+              setSeenChampionIds((prev) => [
                 ...prev.slice(1),
                 nextChampion.info.id,
               ]);
             } else {
-              setSeenChampions((prev) => [...prev, nextChampion.info.id]);
+              setSeenChampionIds((prev) => [...prev, nextChampion.info.id]);
             }
           }
         } else {
