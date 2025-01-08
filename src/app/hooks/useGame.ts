@@ -48,7 +48,7 @@ export const useGame = ({ xPixels, yPixels, isGrayScale }: useGameProps) => {
 
   const [loading, setLoading] = useState<boolean>(true);
 
-  const pixelateImage = async (image: any) => {
+  const pixelateImage = async (image: string) => {
     const input = {
       imgInput: image,
       xPixels: xPixels,

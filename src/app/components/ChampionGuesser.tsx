@@ -26,7 +26,7 @@ const ChampionGuesser = () => {
     isGrayScale,
   });
 
-  const handleSubmit = (event: any) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
 
