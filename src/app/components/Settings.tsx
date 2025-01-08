@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Pixyelator } from "../commads/pixyelator";
+import { Pixyelator } from "../commands/pixyelator";
 
 import styles from "./Settings.module.css";
 
