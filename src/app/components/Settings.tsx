@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Pixyelator } from "../commands/pixyelator";
+import { Pixyelator } from "../commads/pixyelator";
 
 import styles from "./Settings.module.css";
 
@@ -24,7 +24,7 @@ const Settings = ({
   setIsGrayScale,
   toggleSettings,
   bothPixels,
-  setBothPixels
+  setBothPixels,
 }: SettingsProps) => {
   const [bothSliderDisabled, setBothSliderDisabled] = useState<boolean>(false);
 
@@ -120,7 +120,7 @@ const Settings = ({
 
   useEffect(() => {
     console.log("isGrayScale", isGrayScale);
-    const pixelateImage = async (image: any) => {
+    const pixelateImage = async (image: string) => {
       await Pixyelator.convert({
         imgInput: image,
         xPixels: xPixels,
@@ -237,16 +237,5 @@ const Settings = ({
     </div>
   );
 };
-
-interface SliderInputProps {
-  title: string;
-  textFieldValue: string;
-  onFocus: (event: any) => void;
-  onBlur: (event: any) => void;
-  onTextFieldChange: (event: any) => void;
-  rangeFieldValue: number;
-  onRangeFieldChange: (event: any) => void;
-  style: string;
-}
 
 export default Settings;
