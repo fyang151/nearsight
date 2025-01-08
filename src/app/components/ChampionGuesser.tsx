@@ -120,7 +120,7 @@ const ChampionGuesser = () => {
               onClick={reset}
               className="w-6 h-6 cursor-pointer"
             />
-            <button popoverTarget="settings">
+            <button>
               <img
                 src="/gear.svg"
                 onClick={toggleSettings}
@@ -141,15 +141,14 @@ const ChampionGuesser = () => {
         </form>
       </div>
       {showSettings && (
-        <>
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-10 flex items-center justify-center"
+          onClick={toggleSettings}
+        >
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-1"
-            onClick={toggleSettings}
-          ></div>
-          <div
-            popover="auto"
             id="settings"
-            className="rounded-md w-[120vh] h-[80vh]"
+            className="rounded-md w-[120vh] h-[80vh] bg-white p-4 relative"
+            onClick={(e) => e.stopPropagation()}
           >
             <Settings
               xPixels={xPixels}
@@ -163,7 +162,7 @@ const ChampionGuesser = () => {
               setBothPixels={setBothPixels}
             />
           </div>
-        </>
+        </div>
       )}
     </div>
   );
