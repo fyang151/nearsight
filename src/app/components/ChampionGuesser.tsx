@@ -96,25 +96,75 @@ const ChampionGuesser = () => {
   };
 
   return (
-    <div className="flex justify-center items-center gap-4 w-[90vw] h-[calc(95vh-52px)]">
-      <div className="w-[calc(min(90vw-350px,95vh-52px))] h-[calc(min(90vw-350px,95vh-52px))]">
-        {loading ? (
-          <div className="aspect-square flex items-center justify-center">
-            <span className={styles.loader} />
+    <>
+      {/* desktop view */}
+      <div className="hidden sm:flex justify-center">
+        <div className="flex justify-center items-center gap-4 w-[90vw] h-[calc(95vh-52px)]">
+          <div className="w-[calc(min(90vw-350px,95vh-52px))] h-[calc(min(90vw-350px,95vh-52px))]">
+            {loading ? (
+              <div className="aspect-square flex items-center justify-center">
+                <span className={styles.loader} />
+              </div>
+            ) : (
+              <img
+                src={champion?.icon}
+                className="w-full h-full rounded-2xl"
+                style={{ imageRendering: "pixelated" }}
+                draggable="false"
+              />
+            )}
           </div>
-        ) : (
-          <img
-            src={champion?.icon}
-            className="w-full h-full rounded-2xl"
-            style={{ imageRendering: "pixelated" }}
-            draggable="false"
-          />
-        )}
+          <div className="w-[350px] h-full">
+            <div className="flex flex-row justify-between w-full p-2 font-light text-2xl">
+              <div>SCORE: {score}</div>
+              <div className="flex flex-row gap-4 items-center relative">
+                <img
+                  src="/arrow-counterclockwise.svg"
+                  onClick={reset}
+                  className="w-6 h-6 cursor-pointer"
+                />
+                <button>
+                  <img
+                    src="/gear.svg"
+                    onClick={toggleSettings}
+                    className="w-6 h-6 cursor-pointer"
+                  />
+                </button>
+              </div>
+            </div>
+            <div className="italic text-7xl">Who is this champion?</div>
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                value={guess || ""}
+                onChange={(event) => setGuess(event.target.value)}
+                ref={inputRef}
+                className="mt-8 text-5xl focus:outline-none w-full"
+              />
+            </form>
+          </div>
+        </div>
       </div>
-      <div className="w-[350px] h-full">
-        <div className="flex flex-row justify-between w-full p-2 font-light text-2xl">
-          <div>SCORE: {score}</div>
-          <div className="flex flex-row gap-4 items-center relative">
+      {/* mobile view */}
+      <div className="flex flex-col sm:hidden justify-center">
+        <div className="flex flex-col justify-between items-center h-[calc(100vh-226px)]">
+          <span />
+          <div className="w-[calc(min(100vw,100vh-226px-56px-40px))] h-[calc(min(100vw,100vh-226px-56px-40px))] flex">
+            {loading ? (
+              <div className="aspect-square flex items-center justify-center">
+                <span className={styles.loader} />
+              </div>
+            ) : (
+              <img
+                src={champion?.icon}
+                className="w-full h-full rounded-2xl"
+                style={{ imageRendering: "pixelated" }}
+                draggable="false"
+              />
+            )}
+          </div>
+          <div className="flex w-[60vw] h-[60px] justify-around items-center">
+            <div>SCORE: {score}</div>
             <img
               src="/arrow-counterclockwise.svg"
               onClick={reset}
@@ -128,17 +178,17 @@ const ChampionGuesser = () => {
               />
             </button>
           </div>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="Who is This Champion...."
+              value={guess || ""}
+              onChange={(event) => setGuess(event.target.value)}
+              ref={inputRef}
+              className="text-4xl p-2 focus:outline-none w-full text-center"
+            />
+          </form>
         </div>
-        <div className="italic text-7xl">Who is this champion?</div>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            value={guess || ""}
-            onChange={(event) => setGuess(event.target.value)}
-            ref={inputRef}
-            className="mt-8 text-5xl focus:outline-none w-full"
-          />
-        </form>
       </div>
       {showSettings && (
         <div
@@ -164,7 +214,7 @@ const ChampionGuesser = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

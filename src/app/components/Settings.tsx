@@ -135,7 +135,7 @@ const Settings = ({
 
   return (
     <div
-      className={` ${styles.inputWrapper} flex justify-center w-full h-full gap-4 p-4 select-none`}
+      className={`${styles.inputWrapper} flex justify-center w-full h-full gap-4 p-4 select-none`}
     >
       <div className="relative flex flex-col items-start w-full justify-center">
         <img
@@ -233,7 +233,7 @@ const Settings = ({
           </div>
         </div>
       </div>
-      <canvas id="demo" className="w-full rounded-lg" />
+      <canvas id="demo" className="w-full rounded-lg hidden sm:flex" />
     </div>
   );
 };
