@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useGame } from "../hooks/useGame";
+import { useRandomGame } from "../hooks/useRandomGame";
 
 import Settings from "./Settings";
 
@@ -20,7 +20,7 @@ const ChampionGuesser = () => {
 
   const [showSettings, setShowSettings] = useState(false);
 
-  const { champion, newChampion, loading, resetChamps } = useGame({
+  const { champion, newChampion, loading, resetChamps } = useRandomGame({
     xPixels,
     yPixels,
     isGrayScale,

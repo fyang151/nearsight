@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Pixyelator } from "../commands/pixyelator";
+
+import { pixelateToCanvas } from "../utils/pixelateImage";
 
 import styles from "./Settings.module.css";
 
@@ -119,18 +120,7 @@ const Settings = ({
   };
 
   useEffect(() => {
-    console.log("isGrayScale", isGrayScale);
-    const pixelateImage = async (image: string) => {
-      await Pixyelator.convert({
-        imgInput: image,
-        xPixels: xPixels,
-        yPixels: yPixels,
-        customCanvasId: "demo",
-        isGrayScale: isGrayScale,
-      });
-    };
-
-    pixelateImage("/mePlaceholder.jpg");
+    pixelateToCanvas("/mePlaceholder.jpg", xPixels, yPixels, isGrayScale);
   }, [xPixels, yPixels, isGrayScale]);
 
   return (

@@ -49,3 +49,20 @@ export type ChampionInfo = {
   partype: string;
   stats: ChampionStats;
 };
+
+export type ChampionIcons = {
+  [key: string]: {
+    default: { src: string };
+  };
+};
+
+export type Champion = {
+  info: ChampionInfo;
+  icon: string;
+};
+
+export interface useGameProps {
+  xPixels: number;
+  yPixels: number;
+  isGrayScale: boolean;
+}

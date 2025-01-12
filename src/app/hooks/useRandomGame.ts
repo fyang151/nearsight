@@ -7,8 +7,8 @@ import { useState, useEffect } from "react";
 import championIcons from "../data/championIcons";
 import champions from "../data/champions.json";
 
-import { Pixyelator } from "../commands/pixyelator";
-import { ChampionInfo } from "../types/champion";
+import { getPixelatedImage } from "../utils/pixelateImage";
+import { useGameProps, Champion, ChampionIcons } from "../types/champion";
 
 CHAMPION_PRELOAD_COUNT = Math.min(
   Object.keys(champions).length,
@@ -23,24 +23,11 @@ EXCLUDED_PREV_CHAMPION_COUNT = Math.min(
 console.info("CHAMPION_PRELOAD_COUNT: ", CHAMPION_PRELOAD_COUNT);
 console.info("EXCLUDED_PREV_CHAMPION_COUNT: ", EXCLUDED_PREV_CHAMPION_COUNT);
 
-type ChampionIcons = {
-  [key: string]: {
-    default: { src: string };
-  };
-};
-
-type Champion = {
-  info: ChampionInfo;
-  icon: string;
-};
-
-interface useGameProps {
-  xPixels: number;
-  yPixels: number;
-  isGrayScale: boolean;
-}
-
-export const useGame = ({ xPixels, yPixels, isGrayScale }: useGameProps) => {
+export const useRandomGame = ({
+  xPixels,
+  yPixels,
+  isGrayScale,
+}: useGameProps) => {
   const [champion, setChampion] = useState<Champion | undefined>(undefined);
   const [seenChampionIds, setSeenChampionIds] = useState<string[]>([]);
 
@@ -48,18 +35,6 @@ export const useGame = ({ xPixels, yPixels, isGrayScale }: useGameProps) => {
   const [isNextQueue, setIsNextQueue] = useState<boolean>(true);
 
   const [loading, setLoading] = useState<boolean>(true);
-
-  const pixelateImage = async (image: string) => {
-    const input = {
-      imgInput: image,
-      xPixels: xPixels,
-      yPixels: yPixels,
-      isGrayScale: isGrayScale,
-    };
-
-    const pixelatedChampionNew = await Pixyelator.toDataURL(input);
-    return pixelatedChampionNew;
-  };
 
   const loadChampion = async () => {
     const championsArray = Object.values(champions.data);
@@ -70,7 +45,12 @@ export const useGame = ({ xPixels, yPixels, isGrayScale }: useGameProps) => {
     const selectedChampionIcon = (championIcons as ChampionIcons)[
       currentChampion.id
     ].default.src;
-    const pixelatedChampionIcon = await pixelateImage(selectedChampionIcon);
+    const pixelatedChampionIcon = await getPixelatedImage(
+      selectedChampionIcon,
+      xPixels,
+      yPixels,
+      isGrayScale
+    );
 
     const newChampion = {
       info: currentChampion,
