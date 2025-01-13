@@ -18,8 +18,8 @@ const ChampionList = () => {
       {loading ? (
         <div>loading...</div>
       ) : (
-        <ul>
-          {pixelatedChampions?.map((pixelatedChampion) => (
+        <ul className="grid grid-cols-4">
+          {pixelatedChampions.map((pixelatedChampion) => (
             <li key={pixelatedChampion}>
               <img src={pixelatedChampion} />
             </li>

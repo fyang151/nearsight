@@ -13,23 +13,35 @@ export const useListGame = ({
   yPixels,
   isGrayScale,
 }: useGameProps) => {
-  const [pixelatedChampions, setPixelatedChampions] = useState<string[]>();
+  const [pixelatedChampions, setPixelatedChampions] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const iconItemList = Object.values(championIcons);
+    const iconItemList = shuffle(Object.values(championIcons));
 
-    const addPixelatedChampion = (icon: string) => {
-      return getPixelatedImage(icon, xPixels, yPixels, isGrayScale);
+    const addPixelatedChampion = async (icon: string) => {
+      const pixelatedImage = await getPixelatedImage(
+        icon,
+        xPixels,
+        yPixels,
+        isGrayScale
+      );
+      setPixelatedChampions((prev) => [...prev, pixelatedImage]);
+      if (loading) {
+        setLoading(false);
+      }
     };
 
-    Promise.all(
-      iconItemList.map((iconItem) => addPixelatedChampion(iconItem.default.src))
-    ).then((pixelatedImages) => {
-      setPixelatedChampions(pixelatedImages);
+    iconItemList.map((iconItem) => addPixelatedChampion(iconItem.default.src));
+  }, []);
+
+  useEffect(() => {
+    if (pixelatedChampions.length >= 0) {
       setLoading(false);
-    });
-  });
+    } else {
+      setLoading(true);
+    }
+  }, [pixelatedChampions]);
 
   return { pixelatedChampions, loading };
 };
