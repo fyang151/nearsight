@@ -68,6 +68,7 @@ const ChampionList = () => {
                   <img
                     src={pixelatedChampion.icon}
                     className="w-full h-full"
+                    style={{ imageRendering: "pixelated" }}
                     draggable="false"
                   />
                 </li>
@@ -96,6 +97,7 @@ const ChampionList = () => {
           <img
             src={currentChampion?.icon}
             className="w-full h-full"
+            style={{ imageRendering: "pixelated" }}
             draggable="false"
           />
         </div>
