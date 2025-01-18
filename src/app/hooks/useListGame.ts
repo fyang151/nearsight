@@ -4,46 +4,83 @@ import { useState, useEffect } from "react";
 
 import championIcons from "../data/championIcons";
 import champions from "../data/champions.json";
+// import champions from "../data/testChampions.json";
 
 import { getPixelatedImage } from "../utils/pixelateImage";
-import { useGameProps } from "../types/champion";
+import {
+  useGameProps,
+  ChampionIcons,
+  ChampionInfo,
+  Champion,
+} from "../types/champion";
 
 export const useListGame = ({
   xPixels,
   yPixels,
   isGrayScale,
 }: useGameProps) => {
-  const [pixelatedChampions, setPixelatedChampions] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [pixelatedChampions, setPixelatedChampions] = useState<Champion[]>([]);
+  const [initialLoading, setInitialLoading] = useState(true);
+
+  const championsData = Object.values(champions.data);
 
   useEffect(() => {
-    const iconItemList = shuffle(Object.values(championIcons));
+    const championsArray = shuffle(championsData);
 
-    const addPixelatedChampion = async (icon: string) => {
+    const addPixelatedChampion = async (icon: string, info: ChampionInfo) => {
       const pixelatedImage = await getPixelatedImage(
         icon,
         xPixels,
         yPixels,
         isGrayScale
       );
-      setPixelatedChampions((prev) => [...prev, pixelatedImage]);
-      if (loading) {
-        setLoading(false);
-      }
+      const pixelatedChampion = {
+        info: info,
+        icon: pixelatedImage,
+      };
+      setPixelatedChampions((prev) => [...prev, pixelatedChampion]);
     };
-
-    iconItemList.map((iconItem) => addPixelatedChampion(iconItem.default.src));
+    championsArray.map((champion) =>
+      addPixelatedChampion(
+        (championIcons as ChampionIcons)[champion.id].default.src,
+        champion
+      )
+    );
   }, []);
 
   useEffect(() => {
     if (pixelatedChampions.length >= 0) {
-      setLoading(false);
+      setInitialLoading(false);
     } else {
-      setLoading(true);
+      setInitialLoading(true);
     }
   }, [pixelatedChampions]);
 
-  return { pixelatedChampions, loading };
+  // handle getting the champion down here
+  const [currentChampionIndex, setCurrentChampionIndex] = useState<number>(0);
+
+  const [currentChampion, setCurrentChampion] = useState<Champion>();
+
+  const handleCorrectGuess = () => {
+    if (currentChampionIndex === pixelatedChampions.length - 1) {
+      setCurrentChampionIndex((prev) => prev - 1);
+    }
+    setPixelatedChampions((prev) =>
+      prev.filter((_, index) => index !== currentChampionIndex)
+    );
+  };
+
+  useEffect(() => {
+    setCurrentChampion(pixelatedChampions[currentChampionIndex]);
+  }, [currentChampionIndex, pixelatedChampions]);
+
+  return {
+    pixelatedChampions,
+    initialLoading,
+    setCurrentChampionIndex,
+    currentChampion,
+    handleCorrectGuess,
+  };
 };
 
 const shuffle = <T>(arr: T[]) => {

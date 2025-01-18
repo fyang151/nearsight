@@ -5,7 +5,9 @@ export default function Home() {
   return (
     <>
       <Header />
-      <ChampionList />
+      <div className="flex justify-center items-center h-full">
+        <ChampionList />
+      </div>
     </>
   );
 }

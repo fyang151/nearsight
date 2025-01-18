@@ -23,6 +23,8 @@ EXCLUDED_PREV_CHAMPION_COUNT = Math.min(
 console.info("CHAMPION_PRELOAD_COUNT: ", CHAMPION_PRELOAD_COUNT);
 console.info("EXCLUDED_PREV_CHAMPION_COUNT: ", EXCLUDED_PREV_CHAMPION_COUNT);
 
+const championsArray = Object.values(champions.data);
+
 export const useRandomGame = ({
   xPixels,
   yPixels,
@@ -37,7 +39,6 @@ export const useRandomGame = ({
   const [loading, setLoading] = useState<boolean>(true);
 
   const loadChampion = async () => {
-    const championsArray = Object.values(champions.data);
     const randomChampionKey = Math.floor(Math.random() * championsArray.length);
 
     const currentChampion = championsArray[randomChampionKey];

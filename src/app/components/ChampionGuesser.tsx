@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRandomGame } from "../hooks/useRandomGame";
+import { normalizeString } from "./utils/guess-utils";
 
 import Settings from "./Settings";
 
@@ -30,10 +31,6 @@ const ChampionGuesser = () => {
     event.preventDefault();
   };
 
-  const normalizeString = (str: string) => {
-    return str.replace(/[^a-z0-9]/gi, "").toLowerCase();
-  };
-
   useEffect(() => {
     if (
       !loading &&
@@ -49,22 +46,23 @@ const ChampionGuesser = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleFocus = () => {
-    if (!showSettings) {
-      inputRef.current?.focus();
-    }
-  };
-
   useEffect(() => {
-    document.addEventListener("click", handleFocus);
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+
+    const handleClick = () => {
+      if (!showSettings) {
+        inputRef.current?.focus();
+      }
+    };
+
+    document.addEventListener("click", handleClick);
+
     return () => {
-      document.removeEventListener("click", handleFocus);
+      document.removeEventListener("click", handleClick);
     };
   }, [showSettings]);
-
-  useEffect(() => {
-    handleFocus();
-  }, []);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -181,10 +179,9 @@ const ChampionGuesser = () => {
           <form onSubmit={handleSubmit}>
             <input
               type="text"
-              placeholder="Who is This Champion...."
+              placeholder="Who is this champion...."
               value={guess || ""}
               onChange={(event) => setGuess(event.target.value)}
-              ref={inputRef}
               className="text-4xl p-2 focus:outline-none w-full text-center"
             />
           </form>
