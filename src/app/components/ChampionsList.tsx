@@ -16,26 +16,21 @@ const ChampionList = ({
   yPixelsFromUrl,
   isGrayScaleFromUrl,
 }: ChampionListProps) => {
-  console.log(xPixelsFromUrl, yPixelsFromUrl, isGrayScaleFromUrl);
-  const [xPixels, setXPixels] = useState(xPixelsFromUrl || 4);
-  const [yPixels, setYPixels] = useState(yPixelsFromUrl || 4);
+  const xPixels = xPixelsFromUrl || 4;
+  const yPixels = yPixelsFromUrl || 4;
+  const isGrayScale = isGrayScaleFromUrl || false;
 
-  const [adjustedXPixels, setAdjustedXPixels] = useState(xPixelsFromUrl || 4);
-  const [adjustedYPixels, setAdjustedYPixels] = useState(yPixelsFromUrl || 4);
-  const [bothPixels, setBothPixels] = useState<number>(xPixelsFromUrl || 4);
+  const [adjustedXPixels, setAdjustedXPixels] = useState(xPixels);
+  const [adjustedYPixels, setAdjustedYPixels] = useState(yPixels);
+  const [bothPixels, setBothPixels] = useState<number>(xPixels);
 
   const [score, setScore] = useState(0);
 
-  const [isGrayScale, setIsGrayScale] = useState<boolean>(
-    isGrayScaleFromUrl || false
-  );
   const [adjustedIsGrayScale, setAdjustedIsGrayScale] = useState<boolean>(
     isGrayScaleFromUrl || false
   );
 
   const [showSettings, setShowSettings] = useState(false);
-
-  const [resetFlag, setResetFlag] = useState(false);
 
   const {
     pixelatedChampions,
@@ -104,7 +99,7 @@ const ChampionList = ({
     const searchParams = new URLSearchParams();
     searchParams.set("xPixels", adjustedXPixels.toString());
     searchParams.set("yPixels", adjustedYPixels.toString());
-    searchParams.set("isGrayScale", adjustedIsGrayScale.toString());
+    searchParams.set("isGrayScale", Number(adjustedIsGrayScale).toString());
     window.location.href = "/list?" + searchParams.toString();
   };
 

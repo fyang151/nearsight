@@ -27,12 +27,16 @@ const Settings = ({
   bothPixels,
   setBothPixels,
 }: SettingsProps) => {
-  const [bothSliderDisabled, setBothSliderDisabled] = useState<boolean>(false);
+  const initialBothSliderDisabled = xPixels !== yPixels;
+  const [bothSliderDisabled, setBothSliderDisabled] = useState<boolean>(
+    initialBothSliderDisabled
+  );
 
   // we need this to seperate the input and actual value, because we allow users to type in values outside of the range
   const [bothPixelsInput, setBothPixelsInput] = useState<string>(
-    String(bothPixels)
+    initialBothSliderDisabled ? "-" : String(bothPixels)
   );
+
   const [xPixelsInput, setXPixelsInput] = useState<string>(String(xPixels));
   const [yPixelsInput, setYPixelsInput] = useState<string>(String(yPixels));
 

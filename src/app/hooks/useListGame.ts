@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 
 import championIcons from "../data/championIcons";
-// import champions from "../data/champions.json";
-import champions from "../data/testChampions.json";
+import champions from "../data/champions.json";
+// import champions from "../data/testChampions.json";
 
 import { getPixelatedImage } from "../utils/pixelateImage";
 import {

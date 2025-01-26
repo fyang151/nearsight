@@ -13,9 +13,9 @@ export default function Home({ searchParams }: { searchParams: SearchParams }) {
       <Header />
       <div className="flex justify-center items-center h-full">
         <ChampionList
-          xPixelsFromUrl={Number(searchParams.xPixels) || 8}
-          yPixelsFromUrl={Number(searchParams.yPixels) || 8}
-          isGrayScaleFromUrl={searchParams.isGrayScale === "true"}
+          xPixelsFromUrl={Number(searchParams.xPixels)}
+          yPixelsFromUrl={Number(searchParams.yPixels)}
+          isGrayScaleFromUrl={Boolean(Number(searchParams.isGrayScale))}
         />
       </div>
     </>
