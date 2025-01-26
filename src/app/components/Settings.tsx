@@ -11,7 +11,7 @@ interface SettingsProps {
   setYPixels: (yPixels: number) => void;
   isGrayScale: boolean;
   setIsGrayScale: (isGrayScale: boolean) => void;
-  toggleSettings: () => void;
+  toggleSettings?: () => void;
   bothPixels: number;
   setBothPixels: (bothPixels: number) => void;
 }
