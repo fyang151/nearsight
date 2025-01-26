@@ -1,5 +1,8 @@
 "use client";
-import { useState, useEffect, useRef, useMemo } from "react";
+
+const CHAMPIONS_LENGTH = 169;
+
+import { useState, useEffect, useRef } from "react";
 import { useListGame } from "../hooks/useListGame";
 import { normalizeString } from "./utils/guess-utils";
 
@@ -32,6 +35,20 @@ const ChampionList = ({
 
   const [showSettings, setShowSettings] = useState(false);
 
+  const [time, setTime] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const [gameEnd, setGameEnd] = useState(false);
+  const [timerStarted, setTimerStarted] = useState(false);
+  const [finalTime, setFinalTime] = useState(0);
+
+  if (!timerStarted) {
+    timerRef.current = setInterval(() => {
+      setTime((prevTime) => prevTime + 1);
+    }, 10);
+    setTimerStarted(true);
+  }
+
   const {
     pixelatedChampions,
     initialLoading,
@@ -43,10 +60,6 @@ const ChampionList = ({
     yPixels: yPixels,
     isGrayScale: isGrayScale,
   });
-
-  const champsLength = useMemo(() => {
-    return pixelatedChampions.length;
-  }, [pixelatedChampions]);
 
   const [guessInputValue, setGuessInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -62,7 +75,14 @@ const ChampionList = ({
     ) {
       setGuessInputValue("");
       handleCorrectGuess();
-      setScore((prevScore) => prevScore + 1);
+      setScore((prevScore) => {
+        const newScore = prevScore + 1;
+        if (newScore === CHAMPIONS_LENGTH) {
+          setFinalTime(time);
+          setGameEnd(true);
+        }
+        return newScore;
+      });
     }
   };
 
@@ -103,6 +123,23 @@ const ChampionList = ({
     window.location.href = "/list?" + searchParams.toString();
   };
 
+  if (gameEnd) {
+    return (
+      <div className="w-full h-[80vh] flex flex-col justify-center items-center gap-10 text-3xl">
+        Congratulations! You've guessed all {CHAMPIONS_LENGTH} champions in{" "}
+        {finalTime / 100} seconds.
+        <div className="flex flex-row gap-4 items-center">
+          Play again?
+          <img
+            src="/arrow-counterclockwise.svg"
+            className="w-10 h-10 cursor-pointer"
+            onClick={() => resetChamps()}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex h-full gap-4 w-[85vw] mt-4">
@@ -136,7 +173,7 @@ const ChampionList = ({
         </div> */}
           <div className="flex flex-row justify-between w-full p-2 font-light text-2xl">
             <div>
-              {score} / {champsLength}
+              {score} / {CHAMPIONS_LENGTH}
             </div>
             <div className="flex flex-row gap-4 items-center relative">
               <img
@@ -161,6 +198,7 @@ const ChampionList = ({
               draggable="false"
             />
           </div>
+          <div className="text-lg">{time / 100}</div>
           <form>
             <input
               type="text"
