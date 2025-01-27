@@ -23,6 +23,7 @@ export const useListGame = ({
   const [initialLoading, setInitialLoading] = useState(true);
 
   const championsData = Object.values(champions.data);
+  const championsLength = championsData.length;
 
   useEffect(() => {
     const championsArray = shuffle(championsData);
@@ -80,6 +81,7 @@ export const useListGame = ({
     setCurrentChampionIndex,
     currentChampion,
     handleCorrectGuess,
+    championsLength,
   };
 };
 

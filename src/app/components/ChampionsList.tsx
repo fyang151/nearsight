@@ -1,7 +1,5 @@
 "use client";
 
-const CHAMPIONS_LENGTH = 169;
-
 import { useState, useEffect, useRef } from "react";
 import { useListGame } from "../hooks/useListGame";
 import { normalizeString } from "./utils/guess-utils";
@@ -42,18 +40,20 @@ const ChampionList = ({
   const [timerStarted, setTimerStarted] = useState(false);
   const [finalTime, setFinalTime] = useState(0);
 
-  if (!timerStarted) {
-    timerRef.current = setInterval(() => {
-      setTime((prevTime) => prevTime + 1);
-    }, 10);
-    setTimerStarted(true);
-  }
+  useEffect(() => {
+    if (timerStarted) {
+      timerRef.current = setInterval(() => {
+        setTime((prevTime) => prevTime + 1);
+      }, 10);
+    }
+  }, [timerStarted]);
 
   const {
     pixelatedChampions,
     initialLoading,
     setCurrentChampionIndex,
     currentChampion,
+    championsLength,
     handleCorrectGuess,
   } = useListGame({
     xPixels: xPixels,
@@ -65,6 +65,7 @@ const ChampionList = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleGuess = (guessValue: string) => {
+    setTimerStarted(true);
     setGuessInputValue(guessValue);
     if (
       currentChampion &&
@@ -77,7 +78,7 @@ const ChampionList = ({
       handleCorrectGuess();
       setScore((prevScore) => {
         const newScore = prevScore + 1;
-        if (newScore === CHAMPIONS_LENGTH) {
+        if (newScore === championsLength) {
           setFinalTime(time);
           setGameEnd(true);
         }
@@ -126,7 +127,7 @@ const ChampionList = ({
   if (gameEnd) {
     return (
       <div className="w-full h-[80vh] flex flex-col justify-center items-center gap-10 text-3xl">
-        Congratulations! You just guessed all {CHAMPIONS_LENGTH} champions in{" "}
+        Congratulations! You just guessed all {championsLength} champions in{" "}
         {finalTime / 100} seconds.
         <div className="flex flex-row gap-4 items-center">
           Play again?
@@ -173,7 +174,7 @@ const ChampionList = ({
         </div> */}
           <div className="flex flex-row justify-between w-full p-2 font-light text-2xl">
             <div>
-              {score} / {CHAMPIONS_LENGTH}
+              {score} / {championsLength}
             </div>
             <div className="flex flex-row gap-4 items-center relative">
               <img
