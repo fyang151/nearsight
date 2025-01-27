@@ -5,6 +5,7 @@ const Header = ({ currentPage }: { currentPage?: string }) => {
     <div className="flex items-center justify-between p-2">
       <h1 className="hidden sm:block text-3xl">Nearsight.cc</h1>
       <div>
+        {/* cant use Link on /list because it breaks for some reason?? */}
         <Link
           href="/"
           className={`text-lg mr-4 ${currentPage === "random" ? "italic" : ""}`}
