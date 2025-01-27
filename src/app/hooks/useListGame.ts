@@ -33,7 +33,8 @@ export const useListGame = ({
         icon,
         xPixels,
         yPixels,
-        isGrayScale
+        isGrayScale,
+        1
       );
       const pixelatedChampion = {
         info: info,

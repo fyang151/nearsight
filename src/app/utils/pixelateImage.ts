@@ -4,13 +4,15 @@ export const getPixelatedImage = async (
   image: string,
   xPixels: number,
   yPixels: number,
-  isGrayScale: boolean
+  isGrayScale: boolean,
+  maxWorkers: number
 ) => {
   const pixelatedChampionNew = await Pixyelator.toDataURL({
     imgInput: image,
     xPixels: xPixels,
     yPixels: yPixels,
     isGrayScale: isGrayScale,
+    maxWorkers: maxWorkers,
   });
   return pixelatedChampionNew;
 };

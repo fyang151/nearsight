@@ -137,6 +137,12 @@ const ChampionList = ({
             onClick={() => resetChamps()}
           />
         </div>
+        <div className="flex flex-col gap-2 text-lg">
+          <div>
+            Resolution: {xPixels}x{yPixels}
+          </div>
+          <div>Gray Scale: {isGrayScale ? "Yes" : "No"}</div>
+        </div>
       </div>
     );
   }
@@ -154,7 +160,11 @@ const ChampionList = ({
                   <li
                     key={pixelatedChampion.info.id}
                     onClick={() => setCurrentChampionIndex(index)}
-                    className="cursor-pointer"
+                    className={`cursor-pointer ${
+                      currentChampion?.info.id === pixelatedChampion.info.id
+                        ? "border-2 border-white"
+                        : ""
+                    }`}
                   >
                     <img
                       src={pixelatedChampion.icon}
@@ -170,11 +180,11 @@ const ChampionList = ({
         </div>
         <div className="w-[200px] md:w-[calc(max(30%,350px))] h-full sticky top-0">
           {/* <div className="italic text-4xl md:text-6xl m-4">
-          Who is this champion?
-        </div> */}
+            Who is this champion?
+          </div> */}
           <div className="flex flex-row justify-between w-full p-2 font-light text-2xl">
             <div>
-              {score} / {championsLength}
+              {score} / {pixelatedChampions.length + score}
             </div>
             <div className="flex flex-row gap-4 items-center relative">
               <img
@@ -194,7 +204,7 @@ const ChampionList = ({
           <div className="flex">
             <img
               src={currentChampion?.icon}
-              className="w-full h-full"
+              className="w-[calc(min(100%,100vh-300px))] h-full"
               style={{ imageRendering: "pixelated" }}
               draggable="false"
             />
@@ -205,7 +215,7 @@ const ChampionList = ({
               type="text"
               value={guessInputValue}
               onChange={(event) => handleGuess(event.target.value)}
-              className="mt-8 text-5xl focus:outline-none w-full"
+              className="text-5xl focus:outline-none w-full"
               ref={inputRef}
             />
           </form>
