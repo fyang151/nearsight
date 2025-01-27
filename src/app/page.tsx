@@ -4,7 +4,7 @@ import ChampionGuesser from "./components/ChampionGuesser";
 export default function Home() {
   return (
     <main className="min-h-screen">
-      <Header />
+      <Header currentPage="random" />
       <ChampionGuesser />
     </main>
   );

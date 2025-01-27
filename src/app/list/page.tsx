@@ -16,7 +16,7 @@ export default async function Home({
 
   return (
     <>
-      <Header />
+      <Header currentPage="list" />
       <div className="flex justify-center items-center h-full">
         <ChampionList
           xPixelsFromUrl={Number(params.xPixels)}
