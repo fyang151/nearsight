@@ -126,7 +126,7 @@ const ChampionList = ({
   if (gameEnd) {
     return (
       <div className="w-full h-[80vh] flex flex-col justify-center items-center gap-10 text-3xl">
-        Congratulations! You've guessed all {CHAMPIONS_LENGTH} champions in{" "}
+        Congratulations! You just guessed all {CHAMPIONS_LENGTH} champions in{" "}
         {finalTime / 100} seconds.
         <div className="flex flex-row gap-4 items-center">
           Play again?
