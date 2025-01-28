@@ -5,6 +5,7 @@ type SearchParams = {
   xPixels?: string;
   yPixels?: string;
   isGrayScale?: string;
+  sideBarPosition?: string;
 };
 
 export default async function Home({
@@ -22,6 +23,7 @@ export default async function Home({
           xPixelsFromUrl={Number(params.xPixels)}
           yPixelsFromUrl={Number(params.yPixels)}
           isGrayScaleFromUrl={Boolean(Number(params.isGrayScale))}
+          sideBarPositionFromUrl={params.sideBarPosition}
         />
       </div>
     </>

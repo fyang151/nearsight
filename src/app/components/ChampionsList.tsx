@@ -10,12 +10,14 @@ interface ChampionListProps {
   xPixelsFromUrl?: number;
   yPixelsFromUrl?: number;
   isGrayScaleFromUrl?: boolean;
+  sideBarPositionFromUrl?: string;
 }
 
 const ChampionList = ({
   xPixelsFromUrl,
   yPixelsFromUrl,
   isGrayScaleFromUrl,
+  sideBarPositionFromUrl,
 }: ChampionListProps) => {
   const xPixels = xPixelsFromUrl || 4;
   const yPixels = yPixelsFromUrl || 4;
@@ -39,6 +41,10 @@ const ChampionList = ({
   const [gameEnd, setGameEnd] = useState(false);
   const [timerStarted, setTimerStarted] = useState(false);
   const [finalTime, setFinalTime] = useState(0);
+
+  const [sideBarPosition, setSideBarPosition] = useState<string>(
+    sideBarPositionFromUrl || "right"
+  );
 
   useEffect(() => {
     if (timerStarted) {
@@ -121,6 +127,7 @@ const ChampionList = ({
     searchParams.set("xPixels", adjustedXPixels.toString());
     searchParams.set("yPixels", adjustedYPixels.toString());
     searchParams.set("isGrayScale", Number(adjustedIsGrayScale).toString());
+    searchParams.set("sideBarPosition", sideBarPosition);
     window.location.href = "/list?" + searchParams.toString();
   };
 
@@ -149,7 +156,11 @@ const ChampionList = ({
 
   return (
     <>
-      <div className="flex h-full gap-4 w-[85vw] mt-4">
+      <div
+        className={`flex ${
+          sideBarPosition === "left" ? "flex-row-reverse" : "flex-row"
+        } h-full gap-4 w-[85vw] mt-4`}
+      >
         <div className="w-[70%]">
           {initialLoading ? (
             <div>loading...</div>
@@ -209,7 +220,21 @@ const ChampionList = ({
               draggable="false"
             />
           </div>
-          <div className="text-lg">{time / 100}</div>
+          <div className="flex flex-row items-center justify-between">
+            <div className="text-lg">{time / 100}</div>
+            <div className="flex flex-row gap-4 items-center">
+              <img
+                src="/arrow-left.svg"
+                className="w-6 h-6 cursor-pointer"
+                onClick={() => setSideBarPosition("left")}
+              />
+              <img
+                src="/arrow-right.svg"
+                className="w-6 h-6 cursor-pointer"
+                onClick={() => setSideBarPosition("right")}
+              />
+            </div>
+          </div>
           <form>
             <input
               type="text"
