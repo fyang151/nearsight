@@ -119,13 +119,13 @@ const ChampionGuesser = () => {
                 <img
                   src="/arrow-counterclockwise.svg"
                   onClick={reset}
-                  className="w-6 h-6 cursor-pointer"
+                  className="cursor-pointer"
                 />
                 <button>
                   <img
                     src="/gear.svg"
                     onClick={toggleSettings}
-                    className="w-6 h-6 cursor-pointer"
+                    className="cursor-pointer"
                   />
                 </button>
               </div>

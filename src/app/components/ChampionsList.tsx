@@ -198,18 +198,17 @@ const ChampionList = ({
               {score} / {pixelatedChampions.length + score}
             </div>
             <div className="flex flex-row gap-4 items-center relative">
+              <img src="/flag.svg" className="w-6 h-6 cursor-pointer" />
               <img
                 src="/arrow-counterclockwise.svg"
                 className="w-6 h-6 cursor-pointer"
-                onClick={() => resetChamps()}
+                onClick={resetChamps}
               />
-              <button>
-                <img
-                  src="/gear.svg"
-                  className="w-6 h-6 cursor-pointer"
-                  onClick={toggleSettings}
-                />
-              </button>
+              <img
+                src="/gear.svg"
+                className="w-6 h-6 cursor-pointer"
+                onClick={toggleSettings}
+              />
             </div>
           </div>
           <div className="flex">
