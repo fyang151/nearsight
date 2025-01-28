@@ -6,6 +6,9 @@ import { normalizeString } from "./utils/guess-utils";
 
 import Settings from "./Settings";
 
+import championIcons from "../data/championIcons";
+import { ChampionIcons } from "../types/champion";
+
 interface ChampionListProps {
   xPixelsFromUrl?: number;
   yPixelsFromUrl?: number;
@@ -131,6 +134,12 @@ const ChampionList = ({
     window.location.href = "/list?" + searchParams.toString();
   };
 
+  const [sad, becomeSad] = useState<boolean>(false);
+
+  const handleGiveUp = () => {
+    becomeSad(true);
+  };
+
   if (gameEnd) {
     return (
       <div className="w-full h-[80vh] flex flex-col justify-center items-center gap-10 text-3xl">
@@ -182,6 +191,17 @@ const ChampionList = ({
                       className="w-full h-full"
                       style={{ imageRendering: "pixelated" }}
                       draggable="false"
+                      onMouseEnter={(e) => {
+                        if (sad) {
+                          e.currentTarget.src = (
+                            championIcons as ChampionIcons
+                          )[pixelatedChampion.info.id].default.src;
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.src = pixelatedChampion.icon;
+                      }}
+                      alt={pixelatedChampion.info.name}
                     />
                   </li>
                 );
@@ -193,56 +213,78 @@ const ChampionList = ({
           {/* <div className="italic text-4xl md:text-6xl m-4">
             Who is this champion?
           </div> */}
-          <div className="flex flex-row justify-between w-full p-2 font-light text-2xl">
-            <div>
-              {score} / {pixelatedChampions.length + score}
+          {!sad ? (
+            <>
+              <div className="flex flex-row justify-between w-full p-2 font-light text-2xl">
+                <div>
+                  {score} / {pixelatedChampions.length + score}
+                </div>
+                <div className="flex flex-row gap-4 items-center relative">
+                  <img
+                    src="/flag.svg"
+                    className="w-6 h-6 cursor-pointer"
+                    onClick={handleGiveUp}
+                  />
+                  <img
+                    src="/arrow-counterclockwise.svg"
+                    className="w-6 h-6 cursor-pointer"
+                    onClick={resetChamps}
+                  />
+                  <img
+                    src="/gear.svg"
+                    className="w-6 h-6 cursor-pointer"
+                    onClick={toggleSettings}
+                  />
+                </div>
+              </div>
+              <div className="flex">
+                <img
+                  src={currentChampion?.icon}
+                  className="w-[calc(min(100%,100vh-300px))] h-full"
+                  style={{ imageRendering: "pixelated" }}
+                  draggable="false"
+                />
+              </div>
+              <div className="flex flex-row items-center justify-between">
+                <div className="text-lg">{time / 100}</div>
+                <div className="flex flex-row gap-4 items-center">
+                  <img
+                    src="/arrow-left.svg"
+                    className="w-6 h-6 cursor-pointer"
+                    onClick={() => setSideBarPosition("left")}
+                  />
+                  <img
+                    src="/arrow-right.svg"
+                    className="w-6 h-6 cursor-pointer"
+                    onClick={() => setSideBarPosition("right")}
+                  />
+                </div>
+              </div>
+              <form>
+                <input
+                  type="text"
+                  value={guessInputValue}
+                  onChange={(event) => handleGuess(event.target.value)}
+                  className="text-5xl focus:outline-none w-full"
+                  ref={inputRef}
+                />
+              </form>
+            </>
+          ) : (
+            <div className="flex flex-col gap-8">
+              <div className="text-6xl">You gave up!</div>
+              <div className="text-2xl">
+                Hover over any champion to see the unblurred image.
+              </div>
+              <div className="flex w-full justify-center">
+                <img
+                  src="/arrow-counterclockwise.svg"
+                  className="w-10 h-10 cursor-pointer"
+                  onClick={resetChamps}
+                />
+              </div>
             </div>
-            <div className="flex flex-row gap-4 items-center relative">
-              <img src="/flag.svg" className="w-6 h-6 cursor-pointer" />
-              <img
-                src="/arrow-counterclockwise.svg"
-                className="w-6 h-6 cursor-pointer"
-                onClick={resetChamps}
-              />
-              <img
-                src="/gear.svg"
-                className="w-6 h-6 cursor-pointer"
-                onClick={toggleSettings}
-              />
-            </div>
-          </div>
-          <div className="flex">
-            <img
-              src={currentChampion?.icon}
-              className="w-[calc(min(100%,100vh-300px))] h-full"
-              style={{ imageRendering: "pixelated" }}
-              draggable="false"
-            />
-          </div>
-          <div className="flex flex-row items-center justify-between">
-            <div className="text-lg">{time / 100}</div>
-            <div className="flex flex-row gap-4 items-center">
-              <img
-                src="/arrow-left.svg"
-                className="w-6 h-6 cursor-pointer"
-                onClick={() => setSideBarPosition("left")}
-              />
-              <img
-                src="/arrow-right.svg"
-                className="w-6 h-6 cursor-pointer"
-                onClick={() => setSideBarPosition("right")}
-              />
-            </div>
-          </div>
-          <form>
-            <input
-              type="text"
-              value={guessInputValue}
-              onChange={(event) => handleGuess(event.target.value)}
-              className="text-5xl focus:outline-none w-full"
-              ref={inputRef}
-            />
-          </form>
+          )}
         </div>
       </div>
       {showSettings && (
