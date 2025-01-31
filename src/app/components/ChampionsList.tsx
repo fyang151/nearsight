@@ -9,6 +9,8 @@ import Settings from "./Settings";
 import championIcons from "../data/championIcons";
 import { ChampionIcons } from "../types/champion";
 
+import styles from "./ChampionGuesser.module.css";
+
 interface ChampionListProps {
   xPixelsFromUrl?: number;
   yPixelsFromUrl?: number;
@@ -168,11 +170,13 @@ const ChampionList = ({
       <div
         className={`flex ${
           sideBarPosition === "left" ? "flex-row-reverse" : "flex-row"
-        } h-full gap-4 w-[85vw] mt-4`}
+        } h-full gap-4 w-[85vw] mt-4 min-h-[80vh]`}
       >
         <div className="w-[70%]">
-          {initialLoading ? (
-            <div>loading...</div>
+          {initialLoading || pixelatedChampions.length === 0 ? (
+            <div className="flex justify-center items-center">
+              <span className={styles.loader} />
+            </div>
           ) : (
             <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-1 w-full">
               {pixelatedChampions.map((pixelatedChampion, index) => {

@@ -1,5 +1,6 @@
 import Header from "../components/Header";
 import ChampionList from "../components/ChampionsList";
+import Footer from "../components/Footer";
 
 type SearchParams = {
   xPixels?: string;
@@ -26,6 +27,7 @@ export default async function Home({
           sideBarPositionFromUrl={params.sideBarPosition}
         />
       </div>
+      <Footer />
     </>
   );
 }

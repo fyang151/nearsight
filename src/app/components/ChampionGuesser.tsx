@@ -6,7 +6,7 @@ import { normalizeString } from "./utils/guess-utils";
 
 import Settings from "./Settings";
 
-import styles from "./ChampionGuesser.module.css";
+import styles from "./Loader.module.css";
 
 const ChampionGuesser = () => {
   const [guess, setGuess] = useState("");
@@ -100,7 +100,7 @@ const ChampionGuesser = () => {
         <div className="flex justify-center items-center gap-4 w-[90vw] h-[calc(95vh-52px)]">
           <div className="w-[calc(min(90vw-350px,95vh-52px))] h-[calc(min(90vw-350px,95vh-52px))]">
             {loading ? (
-              <div className="aspect-square flex items-center justify-center">
+              <div className="aspect-square flex items-center justify-center h-full">
                 <span className={styles.loader} />
               </div>
             ) : (
