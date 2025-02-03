@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { Metadata } from "next";
 import "./globals.css";
 
@@ -20,6 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-Inter">{children}</body>
+      <Analytics
+        mode={
+          process.env.NODE_ENV === "development" ? "development" : "production"
+        }
+      />
     </html>
   );
 }
