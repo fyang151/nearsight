@@ -134,7 +134,7 @@ const ChampionList = ({
     return () => {
       window.removeEventListener("keydown", navigateChampion);
     };
-  }, [gridColumns, currentChampionIndex]);
+  }, [gridColumns, currentChampionIndex, pixelatedChampions]);
 
   const selectedChampionRef = useRef<HTMLLIElement>(null);
 
@@ -253,11 +253,11 @@ const ChampionList = ({
       <div
         className={`flex ${
           sideBarPosition === "left" ? "flex-row-reverse" : "flex-row"
-        } h-full gap-4 w-[85vw] mt-4 min-h-[80vh]`}
+        } h-full gap-4 w-[85vw] mt-4 min-h-screen`}
       >
         <div className="w-[70%] overflow-auto">
           {initialLoading || pixelatedChampions.length === 0 ? (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center h-full">
               <span className={styles.loader} />
             </div>
           ) : (
