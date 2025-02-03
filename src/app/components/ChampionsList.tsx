@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useListGame } from "../hooks/useListGame";
 import { normalizeString } from "./utils/guess-utils";
 
@@ -51,14 +51,6 @@ const ChampionList = ({
     sideBarPositionFromUrl || "right"
   );
 
-  useEffect(() => {
-    if (timerStarted) {
-      timerRef.current = setInterval(() => {
-        setTime((prevTime) => prevTime + 1);
-      }, 10);
-    }
-  }, [timerStarted]);
-
   const {
     pixelatedChampions,
     initialLoading,
@@ -72,99 +64,6 @@ const ChampionList = ({
     yPixels: yPixels,
     isGrayScale: isGrayScale,
   });
-
-  const [guessInputValue, setGuessInputValue] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const handleGuess = (guessValue: string) => {
-    setTimerStarted(true);
-    setGuessInputValue(guessValue);
-    if (
-      currentChampion &&
-      (normalizeString(guessValue) ===
-        normalizeString(currentChampion.info.name) ||
-        normalizeString(guessValue) ===
-          normalizeString(currentChampion.info.id))
-    ) {
-      setGuessInputValue("");
-      handleCorrectGuess();
-      setScore((prevScore) => {
-        const newScore = prevScore + 1;
-        if (newScore === championsLength) {
-          setFinalTime(time);
-          setGameEnd(true);
-        }
-        return newScore;
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-
-    const handleClick = () => {
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
-    };
-
-    document.addEventListener("click", handleClick);
-
-    return () => {
-      document.removeEventListener("click", handleClick);
-    };
-  }, []);
-
-  const toggleSettings = () => {
-    setShowSettings(!showSettings);
-    if (
-      adjustedXPixels !== xPixels ||
-      adjustedYPixels !== yPixels ||
-      adjustedIsGrayScale !== isGrayScale
-    ) {
-      resetChamps();
-    }
-  };
-
-  const resetChamps = () => {
-    const searchParams = new URLSearchParams();
-    searchParams.set("xPixels", adjustedXPixels.toString());
-    searchParams.set("yPixels", adjustedYPixels.toString());
-    searchParams.set("isGrayScale", Number(adjustedIsGrayScale).toString());
-    searchParams.set("sideBarPosition", sideBarPosition);
-    window.location.href = "/list?" + searchParams.toString();
-  };
-
-  const [sad, becomeSad] = useState<boolean>(false);
-
-  const handleGiveUp = () => {
-    becomeSad(true);
-  };
-
-  if (gameEnd) {
-    return (
-      <div className="w-full h-[80vh] flex flex-col justify-center items-center gap-10 text-3xl">
-        Congratulations! You just guessed all {championsLength} champions in{" "}
-        {finalTime / 100} seconds.
-        <div className="flex flex-row gap-4 items-center">
-          Play again?
-          <img
-            src="/arrow-counterclockwise.svg"
-            className="w-10 h-10 cursor-pointer"
-            onClick={() => resetChamps()}
-          />
-        </div>
-        <div className="flex flex-col gap-2 text-lg">
-          <div>
-            Resolution: {xPixels}x{yPixels}
-          </div>
-          <div>Gray Scale: {isGrayScale ? "Yes" : "No"}</div>
-        </div>
-      </div>
-    );
-  }
 
   const [gridColumns, setGridColumns] = useState<number | null>(null);
 
@@ -247,6 +146,107 @@ const ChampionList = ({
       });
     }
   }, [currentChampionIndex]);
+
+  useEffect(() => {
+    if (timerStarted) {
+      timerRef.current = setInterval(() => {
+        setTime((prevTime) => prevTime + 1);
+      }, 10);
+    }
+  }, [timerStarted]);
+
+  const [sad, becomeSad] = useState<boolean>(false);
+
+  const [guessInputValue, setGuessInputValue] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleGuess = (guessValue: string) => {
+    setTimerStarted(true);
+    setGuessInputValue(guessValue);
+    if (
+      currentChampion &&
+      (normalizeString(guessValue) ===
+        normalizeString(currentChampion.info.name) ||
+        normalizeString(guessValue) ===
+          normalizeString(currentChampion.info.id))
+    ) {
+      setGuessInputValue("");
+      handleCorrectGuess();
+      setScore((prevScore) => {
+        const newScore = prevScore + 1;
+        if (newScore === championsLength) {
+          setFinalTime(time);
+          setGameEnd(true);
+        }
+        return newScore;
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+
+    const handleClick = () => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    };
+
+    document.addEventListener("click", handleClick);
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
+
+  const toggleSettings = () => {
+    setShowSettings(!showSettings);
+    if (
+      adjustedXPixels !== xPixels ||
+      adjustedYPixels !== yPixels ||
+      adjustedIsGrayScale !== isGrayScale
+    ) {
+      resetChamps();
+    }
+  };
+
+  const resetChamps = () => {
+    const searchParams = new URLSearchParams();
+    searchParams.set("xPixels", adjustedXPixels.toString());
+    searchParams.set("yPixels", adjustedYPixels.toString());
+    searchParams.set("isGrayScale", Number(adjustedIsGrayScale).toString());
+    searchParams.set("sideBarPosition", sideBarPosition);
+    window.location.href = "/list?" + searchParams.toString();
+  };
+
+  const handleGiveUp = () => {
+    becomeSad(true);
+  };
+
+  if (gameEnd) {
+    return (
+      <div className="w-full h-[80vh] flex flex-col justify-center items-center gap-10 text-3xl">
+        Congratulations! You just guessed all {championsLength} champions in{" "}
+        {finalTime / 100} seconds.
+        <div className="flex flex-row gap-4 items-center">
+          Play again?
+          <img
+            src="/arrow-counterclockwise.svg"
+            className="w-10 h-10 cursor-pointer"
+            onClick={() => resetChamps()}
+          />
+        </div>
+        <div className="flex flex-col gap-2 text-lg">
+          <div>
+            Resolution: {xPixels}x{yPixels}
+          </div>
+          <div>Gray Scale: {isGrayScale ? "Yes" : "No"}</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
