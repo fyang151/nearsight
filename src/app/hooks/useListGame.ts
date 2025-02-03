@@ -79,6 +79,7 @@ export const useListGame = ({
   return {
     pixelatedChampions,
     initialLoading,
+    currentChampionIndex,
     setCurrentChampionIndex,
     currentChampion,
     handleCorrectGuess,

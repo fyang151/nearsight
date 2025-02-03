@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useListGame } from "../hooks/useListGame";
 import { normalizeString } from "./utils/guess-utils";
 
@@ -62,6 +62,7 @@ const ChampionList = ({
   const {
     pixelatedChampions,
     initialLoading,
+    currentChampionIndex,
     setCurrentChampionIndex,
     currentChampion,
     championsLength,
@@ -165,6 +166,88 @@ const ChampionList = ({
     );
   }
 
+  const [gridColumns, setGridColumns] = useState<number | null>(null);
+
+  const gridRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    const updateGridColumns = () => {
+      if (gridRef.current) {
+        const gridStyle = window.getComputedStyle(gridRef.current);
+        const newGridColumns = gridStyle.gridTemplateColumns.split(" ").length;
+        setGridColumns(newGridColumns);
+      }
+    };
+
+    updateGridColumns();
+
+    window.addEventListener("resize", updateGridColumns);
+    return () => {
+      window.removeEventListener("resize", updateGridColumns);
+    };
+  }, [pixelatedChampions]);
+
+  const leftChampion = () => {
+    if (currentChampionIndex > 0) {
+      setCurrentChampionIndex((prev) => prev - 1);
+    }
+  };
+
+  const downChampion = () => {
+    if (
+      gridColumns &&
+      currentChampionIndex + gridColumns < pixelatedChampions.length
+    ) {
+      setCurrentChampionIndex((prev) => prev + gridColumns);
+    }
+  };
+
+  const upChampion = () => {
+    if (gridColumns && currentChampionIndex - gridColumns >= 0) {
+      setCurrentChampionIndex((prev) => prev - gridColumns);
+    }
+  };
+
+  const rightChampion = () => {
+    if (currentChampionIndex + 1 < pixelatedChampions.length) {
+      setCurrentChampionIndex((prev) => prev + 1);
+    }
+  };
+
+  useEffect(() => {
+    const navigateChampion = (event: KeyboardEvent) => {
+      if (gridColumns) {
+        if (event.key === "ArrowLeft") {
+          leftChampion();
+        }
+        if (event.key === "ArrowDown") {
+          downChampion();
+        }
+        if (event.key === "ArrowUp") {
+          upChampion();
+        }
+        if (event.key === "ArrowRight") {
+          rightChampion();
+        }
+      }
+    };
+    window.addEventListener("keydown", navigateChampion);
+    return () => {
+      window.removeEventListener("keydown", navigateChampion);
+    };
+  }, [gridColumns, currentChampionIndex]);
+
+  const selectedChampionRef = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    if (selectedChampionRef.current) {
+      selectedChampionRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [currentChampionIndex]);
+
   return (
     <>
       <div
@@ -172,13 +255,16 @@ const ChampionList = ({
           sideBarPosition === "left" ? "flex-row-reverse" : "flex-row"
         } h-full gap-4 w-[85vw] mt-4 min-h-[80vh]`}
       >
-        <div className="w-[70%]">
+        <div className="w-[70%] overflow-auto">
           {initialLoading || pixelatedChampions.length === 0 ? (
             <div className="flex justify-center items-center">
               <span className={styles.loader} />
             </div>
           ) : (
-            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-1 w-full">
+            <ul
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-1 w-full"
+              ref={gridRef}
+            >
               {pixelatedChampions.map((pixelatedChampion, index) => {
                 return (
                   <li
@@ -189,6 +275,11 @@ const ChampionList = ({
                         ? "border-2 border-white"
                         : ""
                     }`}
+                    ref={
+                      currentChampionIndex === index
+                        ? selectedChampionRef
+                        : null
+                    }
                   >
                     <img
                       src={pixelatedChampion.icon}
@@ -214,9 +305,6 @@ const ChampionList = ({
           )}
         </div>
         <div className="w-[200px] md:w-[calc(max(30%,350px))] h-full sticky top-0">
-          {/* <div className="italic text-4xl md:text-6xl m-4">
-            Who is this champion?
-          </div> */}
           {!sad ? (
             <>
               <div className="flex flex-row justify-between w-full p-2 font-light text-2xl">
@@ -252,15 +340,19 @@ const ChampionList = ({
               <div className="flex flex-row items-center justify-between">
                 <div className="text-lg">{time / 100}</div>
                 <div className="flex flex-row gap-4 items-center">
+                  Sidebar
                   <img
-                    src="/arrow-left.svg"
+                    src={
+                      sideBarPosition === "right"
+                        ? "/arrow-left.svg"
+                        : "/arrow-right.svg"
+                    }
                     className="w-6 h-6 cursor-pointer"
-                    onClick={() => setSideBarPosition("left")}
-                  />
-                  <img
-                    src="/arrow-right.svg"
-                    className="w-6 h-6 cursor-pointer"
-                    onClick={() => setSideBarPosition("right")}
+                    onClick={() =>
+                      setSideBarPosition(
+                        sideBarPosition === "right" ? "left" : "right"
+                      )
+                    }
                   />
                 </div>
               </div>
