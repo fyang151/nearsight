@@ -11,18 +11,20 @@ import { ChampionIcons } from "../types/champion";
 
 import styles from "./ChampionGuesser.module.css";
 
+export const sideBarStyles = ["flex-row", "flex-col", "flex-row-reverse"];
+
 interface ChampionListProps {
   xPixelsFromUrl?: number;
   yPixelsFromUrl?: number;
   isGrayScaleFromUrl?: boolean;
-  sideBarPositionFromUrl?: string;
+  sideBarPositionIndexFromUrl?: number;
 }
 
 const ChampionList = ({
   xPixelsFromUrl,
   yPixelsFromUrl,
   isGrayScaleFromUrl,
-  sideBarPositionFromUrl,
+  sideBarPositionIndexFromUrl,
 }: ChampionListProps) => {
   const xPixels = xPixelsFromUrl || 4;
   const yPixels = yPixelsFromUrl || 4;
@@ -47,8 +49,8 @@ const ChampionList = ({
   const [timerStarted, setTimerStarted] = useState(false);
   const [finalTime, setFinalTime] = useState(0);
 
-  const [sideBarPosition, setSideBarPosition] = useState<string>(
-    sideBarPositionFromUrl || "right"
+  const [sideBarPositionIndex, setSideBarPositionIndex] = useState<number>(
+    Number(sideBarPositionIndexFromUrl) || 2
   );
 
   const {
@@ -217,7 +219,7 @@ const ChampionList = ({
     searchParams.set("xPixels", adjustedXPixels.toString());
     searchParams.set("yPixels", adjustedYPixels.toString());
     searchParams.set("isGrayScale", Number(adjustedIsGrayScale).toString());
-    searchParams.set("sideBarPosition", sideBarPosition);
+    searchParams.set("sideBarPosition", String(sideBarPositionIndex));
     window.location.href = "/list?" + searchParams.toString();
   };
 
@@ -251,10 +253,72 @@ const ChampionList = ({
   return (
     <>
       <div
-        className={`flex ${
-          sideBarPosition === "left" ? "flex-row-reverse" : "flex-row"
-        } h-full gap-4 w-[85vw] mt-4 min-h-screen`}
+        className={`flex ${sideBarStyles[sideBarPositionIndex]} h-full gap-4 w-[85vw] mt-4 min-h-screen`}
       >
+        <div className="w-[200px] md:w-[calc(max(30%,350px))] h-full sticky top-0">
+          {!sad ? (
+            <>
+              <div className="flex flex-row justify-between w-full p-2 font-light text-2xl">
+                <div>
+                  {score} / {pixelatedChampions.length + score}
+                </div>
+                <div className="flex flex-row gap-4 items-center relative">
+                  <img
+                    src="/flag.svg"
+                    className="w-6 h-6 cursor-pointer"
+                    onClick={handleGiveUp}
+                  />
+                  <img
+                    src="/arrow-counterclockwise.svg"
+                    className="w-6 h-6 cursor-pointer"
+                    onClick={resetChamps}
+                  />
+                  <img
+                    src="/gear.svg"
+                    className="w-6 h-6 cursor-pointer"
+                    onClick={toggleSettings}
+                  />
+                </div>
+              </div>
+              <div className="flex">
+                {sideBarPositionIndex === 0 || sideBarPositionIndex === 2 ? (
+                  <img
+                    src={currentChampion?.icon}
+                    className="w-[calc(min(100%,100vh-300px))] h-full"
+                    style={{ imageRendering: "pixelated" }}
+                    draggable="false"
+                  />
+                ) : null}
+              </div>
+              <div className="flex flex-row items-center justify-between">
+                <div className="text-lg">{time / 100}</div>
+              </div>
+              <form>
+                <input
+                  type="text"
+                  value={guessInputValue}
+                  onChange={(event) => handleGuess(event.target.value)}
+                  className="text-5xl focus:outline-none w-full"
+                  ref={inputRef}
+                />
+              </form>
+            </>
+          ) : (
+            <div className="flex flex-col gap-8">
+              <div className="text-6xl">You gave up!</div>
+              <div className="text-2xl">
+                Hover over any champion to see the unblurred image.
+              </div>
+              <div className="flex w-full justify-center">
+                <img
+                  src="/arrow-counterclockwise.svg"
+                  className="w-10 h-10 cursor-pointer"
+                  onClick={resetChamps}
+                />
+              </div>
+            </div>
+          )}
+        </div>
         <div className="w-[70%] overflow-auto">
           {initialLoading || pixelatedChampions.length === 0 ? (
             <div className="flex justify-center items-center h-full">
@@ -304,84 +368,6 @@ const ChampionList = ({
             </ul>
           )}
         </div>
-        <div className="w-[200px] md:w-[calc(max(30%,350px))] h-full sticky top-0">
-          {!sad ? (
-            <>
-              <div className="flex flex-row justify-between w-full p-2 font-light text-2xl">
-                <div>
-                  {score} / {pixelatedChampions.length + score}
-                </div>
-                <div className="flex flex-row gap-4 items-center relative">
-                  <img
-                    src="/flag.svg"
-                    className="w-6 h-6 cursor-pointer"
-                    onClick={handleGiveUp}
-                  />
-                  <img
-                    src="/arrow-counterclockwise.svg"
-                    className="w-6 h-6 cursor-pointer"
-                    onClick={resetChamps}
-                  />
-                  <img
-                    src="/gear.svg"
-                    className="w-6 h-6 cursor-pointer"
-                    onClick={toggleSettings}
-                  />
-                </div>
-              </div>
-              <div className="flex">
-                <img
-                  src={currentChampion?.icon}
-                  className="w-[calc(min(100%,100vh-300px))] h-full"
-                  style={{ imageRendering: "pixelated" }}
-                  draggable="false"
-                />
-              </div>
-              <div className="flex flex-row items-center justify-between">
-                <div className="text-lg">{time / 100}</div>
-                <div className="flex flex-row gap-4 items-center">
-                  Sidebar
-                  <img
-                    src={
-                      sideBarPosition === "right"
-                        ? "/arrow-left.svg"
-                        : "/arrow-right.svg"
-                    }
-                    className="w-6 h-6 cursor-pointer"
-                    onClick={() =>
-                      setSideBarPosition(
-                        sideBarPosition === "right" ? "left" : "right"
-                      )
-                    }
-                  />
-                </div>
-              </div>
-              <form>
-                <input
-                  type="text"
-                  value={guessInputValue}
-                  onChange={(event) => handleGuess(event.target.value)}
-                  className="text-5xl focus:outline-none w-full"
-                  ref={inputRef}
-                />
-              </form>
-            </>
-          ) : (
-            <div className="flex flex-col gap-8">
-              <div className="text-6xl">You gave up!</div>
-              <div className="text-2xl">
-                Hover over any champion to see the unblurred image.
-              </div>
-              <div className="flex w-full justify-center">
-                <img
-                  src="/arrow-counterclockwise.svg"
-                  className="w-10 h-10 cursor-pointer"
-                  onClick={resetChamps}
-                />
-              </div>
-            </div>
-          )}
-        </div>
       </div>
       {showSettings && (
         <div
@@ -403,6 +389,8 @@ const ChampionList = ({
               isGrayScale={adjustedIsGrayScale}
               setIsGrayScale={setAdjustedIsGrayScale}
               toggleSettings={toggleSettings}
+              sideBarPositionIndex={sideBarPositionIndex}
+              setSideBarPositionIndex={setSideBarPositionIndex}
             />
           </div>
         </div>

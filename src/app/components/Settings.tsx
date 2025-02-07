@@ -14,6 +14,8 @@ interface SettingsProps {
   toggleSettings?: () => void;
   bothPixels: number;
   setBothPixels: (bothPixels: number) => void;
+  sideBarPositionIndex: number;
+  setSideBarPositionIndex: (value: number | ((prev: number) => number)) => void;
 }
 
 const Settings = ({
@@ -26,6 +28,8 @@ const Settings = ({
   toggleSettings,
   bothPixels,
   setBothPixels,
+  sideBarPositionIndex,
+  setSideBarPositionIndex,
 }: SettingsProps) => {
   const initialBothSliderDisabled = xPixels !== yPixels;
   const [bothSliderDisabled, setBothSliderDisabled] = useState<boolean>(
@@ -138,14 +142,26 @@ const Settings = ({
           className="absolute top-0 w-8 h-8 cursor-pointer"
         />
         <div className="flex flex-col w-full gap-4">
-          <label className="gap-4 flex items-center">
+          {90 * sideBarPositionIndex}
+          <div className="grid grid-cols-[auto_1fr] gap-4">
             <input
               type="checkbox"
               checked={isGrayScale}
               onChange={handleIsGrayScaleChecked}
             />
             Grayscale
-          </label>
+            <img
+              src="/arrow-left.svg"
+              className={`w-6 h-6 cursor-pointer rotate-${
+                90 * sideBarPositionIndex
+              }`}
+              // className={`w-6 h-6 cursor-pointer rotate-180`}
+              onClick={() =>
+                setSideBarPositionIndex((prev: number) => (prev + 1) % 3)
+              }
+            />
+            Sidebar Position
+          </div>
           <div>
             <div className="flex">
               <h1 className="flex w-[80px] justify-end mr-4">Both</h1>
