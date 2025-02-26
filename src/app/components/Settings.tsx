@@ -142,7 +142,6 @@ const Settings = ({
           className="absolute top-0 w-8 h-8 cursor-pointer"
         />
         <div className="flex flex-col w-full gap-4">
-          {90 * sideBarPositionIndex}
           <div className="grid grid-cols-[auto_1fr] gap-4">
             <input
               type="checkbox"
@@ -155,7 +154,6 @@ const Settings = ({
               className={`w-6 h-6 cursor-pointer rotate-${
                 90 * sideBarPositionIndex
               }`}
-              // className={`w-6 h-6 cursor-pointer rotate-180`}
               onClick={() =>
                 setSideBarPositionIndex((prev: number) => (prev + 1) % 3)
               }
