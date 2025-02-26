@@ -1,8 +1,10 @@
+#TODO make these download scripts better
+
 import requests
 import os
 import shutil
 
-version = "14.22.1"
+version = "15.4.1"
 
 champsUrl = f'https://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/champion.json'
 champsRes = requests.get(champsUrl)
