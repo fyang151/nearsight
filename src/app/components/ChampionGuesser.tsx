@@ -27,11 +27,31 @@ const ChampionGuesser = () => {
     isGrayScale,
   });
 
+  const [shouldSubmitWithSpace, setShouldSubmitWithSpace] = useState(false);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (shouldSubmitWithSpace) {
+      handleCheckGuess();
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === " " && shouldSubmitWithSpace) {
+      handleCheckGuess();
+    }
   };
 
   useEffect(() => {
+    if (!shouldSubmitWithSpace) {
+      handleCheckGuess();
+    }
+  }, [guess, shouldSubmitWithSpace]);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleCheckGuess = () => {
     if (
       !loading &&
       champion &&
@@ -42,9 +62,7 @@ const ChampionGuesser = () => {
       setGuess("");
       newChampion();
     }
-  }, [guess]);
-
-  const inputRef = useRef<HTMLInputElement>(null);
+  };
 
   useEffect(() => {
     if (inputRef.current) {
@@ -136,6 +154,7 @@ const ChampionGuesser = () => {
                 type="text"
                 value={guess || ""}
                 onChange={(event) => setGuess(event.target.value)}
+                onKeyDown={handleKeyDown}
                 ref={inputRef}
                 className="mt-8 text-5xl focus:outline-none w-full"
               />
@@ -182,6 +201,7 @@ const ChampionGuesser = () => {
               placeholder="Who is this champion...."
               value={guess || ""}
               onChange={(event) => setGuess(event.target.value)}
+              onKeyDown={handleKeyDown}
               className="text-4xl p-2 focus:outline-none w-full text-center"
             />
           </form>
@@ -207,6 +227,8 @@ const ChampionGuesser = () => {
               toggleSettings={toggleSettings}
               bothPixels={bothPixels}
               setBothPixels={setBothPixels}
+              shouldSubmitWithSpace={shouldSubmitWithSpace}
+              setShouldSubmitWithSpace={setShouldSubmitWithSpace}
             />
           </div>
         </div>

@@ -14,6 +14,8 @@ interface SettingsProps {
   toggleSettings?: () => void;
   bothPixels: number;
   setBothPixels: (bothPixels: number) => void;
+  shouldSubmitWithSpace: boolean;
+  setShouldSubmitWithSpace: (shouldSubmitWithSpace: boolean) => void;
 }
 
 const Settings = ({
@@ -26,6 +28,8 @@ const Settings = ({
   toggleSettings,
   bothPixels,
   setBothPixels,
+  shouldSubmitWithSpace,
+  setShouldSubmitWithSpace,
 }: SettingsProps) => {
   const initialBothSliderDisabled = xPixels !== yPixels;
   const [bothSliderDisabled, setBothSliderDisabled] = useState<boolean>(
@@ -123,6 +127,10 @@ const Settings = ({
     setIsGrayScale(!isGrayScale);
   };
 
+  const handleShouldSubmitWithSpaceChecked = () => {
+    setShouldSubmitWithSpace(!shouldSubmitWithSpace);
+  };
+
   useEffect(() => {
     pixelateToCanvas("/mePlaceholder.jpg", xPixels, yPixels, isGrayScale);
   }, [xPixels, yPixels, isGrayScale]);
@@ -138,14 +146,6 @@ const Settings = ({
           className="absolute top-0 w-8 h-8 cursor-pointer"
         />
         <div className="flex flex-col w-full gap-4">
-          <label className="gap-4 flex items-center">
-            <input
-              type="checkbox"
-              checked={isGrayScale}
-              onChange={handleIsGrayScaleChecked}
-            />
-            Grayscale
-          </label>
           <div>
             <div className="flex">
               <h1 className="flex w-[80px] justify-end mr-4">Both</h1>
@@ -225,6 +225,22 @@ const Settings = ({
               className={styles.y}
             />
           </div>
+          <label className="gap-4 flex items-center">
+            <input
+              type="checkbox"
+              checked={isGrayScale}
+              onChange={handleIsGrayScaleChecked}
+            />
+            Grayscale
+          </label>
+          <label className="gap-4 flex items-center">
+            <input
+              type="checkbox"
+              checked={shouldSubmitWithSpace}
+              onChange={handleShouldSubmitWithSpaceChecked}
+            />
+            Submit with space
+          </label>
         </div>
       </div>
       <canvas id="demo" className="w-full rounded-lg hidden sm:flex" />

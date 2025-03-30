@@ -51,6 +51,8 @@ const ChampionList = ({
     sideBarPositionFromUrl || "right"
   );
 
+  const [shouldSubmitWithSpace, setShouldSubmitWithSpace] = useState(false);
+
   const {
     pixelatedChampions,
     initialLoading,
@@ -163,6 +165,13 @@ const ChampionList = ({
   const handleGuess = (guessValue: string) => {
     setTimerStarted(true);
     setGuessInputValue(guessValue);
+
+    if (!shouldSubmitWithSpace) {
+      handleGuessCheck(guessValue);
+    }
+  };
+
+  const handleGuessCheck = (guessValue: string) => {
     if (
       currentChampion &&
       (normalizeString(guessValue) ===
@@ -180,6 +189,15 @@ const ChampionList = ({
         }
         return newScore;
       });
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+    }
+    if ((event.key === " " || event.key === "Enter") && shouldSubmitWithSpace) {
+      handleGuessCheck(guessInputValue);
     }
   };
 
@@ -356,11 +374,12 @@ const ChampionList = ({
                   />
                 </div>
               </div>
-              <form>
+              <form onSubmit={() => handleGuess(guessInputValue)}>
                 <input
                   type="text"
                   value={guessInputValue}
                   onChange={(event) => handleGuess(event.target.value)}
+                  onKeyDown={handleKeyDown}
                   className="text-5xl focus:outline-none w-full"
                   ref={inputRef}
                 />
@@ -403,6 +422,8 @@ const ChampionList = ({
               isGrayScale={adjustedIsGrayScale}
               setIsGrayScale={setAdjustedIsGrayScale}
               toggleSettings={toggleSettings}
+              shouldSubmitWithSpace={shouldSubmitWithSpace}
+              setShouldSubmitWithSpace={setShouldSubmitWithSpace}
             />
           </div>
         </div>
