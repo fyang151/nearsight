@@ -290,7 +290,7 @@ const ChampionList = ({
                     onClick={() => setCurrentChampionIndex(index)}
                     className={`cursor-pointer ${
                       currentChampion?.info.id === pixelatedChampion.info.id
-                        ? "border-2 border-white"
+                        ? "border-4 border-white"
                         : ""
                     }`}
                     ref={
@@ -302,7 +302,7 @@ const ChampionList = ({
                     <img
                       src={pixelatedChampion.icon}
                       className="w-full h-full"
-                      style={{ imageRendering: "pixelated" }}
+                      // style={{ imageRendering: "pixelated" }}
                       draggable="false"
                       onMouseEnter={(e) => {
                         if (sad) {
