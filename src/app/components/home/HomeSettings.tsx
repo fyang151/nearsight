@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Champion } from "../../types/champion";
 
 import { pixelateToCanvas } from "../../utils/pixelateImage";
 
