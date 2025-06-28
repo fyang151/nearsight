@@ -1,5 +1,5 @@
 import Header from "./components/Header";
-import ChampionGuesser from "./components/ChampionGuesser";
+import ChampionGuesser from "./components/home/ChampionRandom";
 import Footer from "./components/Footer";
 
 export default function Home() {

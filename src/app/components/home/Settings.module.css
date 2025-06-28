@@ -1,0 +1,132 @@
+.inputWrapper input[type="text"] {
+  width: 30px;
+  text-align: center;
+}
+
+.inputWrapper input[type="text"]:focus {
+  outline: none;
+}
+
+.inputWrapper input[type="text"].both {
+  color: black;
+  border: 2px solid black;
+}
+
+.inputWrapper input[type="text"].disabled {
+  color: var(--color-disabled);
+  border: 2px solid var(--color-disabled);
+}
+
+.inputWrapper input[type="text"].x {
+  color: var(--color-accent-1);
+  border: 2px solid var(--color-accent-1);
+}
+
+.inputWrapper input[type="text"].y {
+  color: var(--color-accent-2);
+  border: 2px solid var(--color-accent-2);
+}
+
+.inputWrapper input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 5px;
+  background: black;
+  border-radius: 4px;
+  outline: none;
+}
+
+.inputWrapper input[type="range"].disabled {
+  background: var(--color-disabled);
+}
+
+.inputWrapper input[type="range"].x {
+  background: var(--color-accent-1);
+}
+
+.inputWrapper input[type="range"].y {
+  background: var(--color-accent-2);
+}
+
+.inputWrapper input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.inputWrapper input[type="range"].both::-webkit-slider-thumb {
+  background: black;
+}
+
+.inputWrapper input[type="range"].disabled::-webkit-slider-thumb {
+  background: var(--color-disabled);
+  visibility: hidden;
+}
+
+.inputWrapper input[type="range"].x::-webkit-slider-thumb {
+  background: var(--color-accent-1);
+}
+
+.inputWrapper input[type="range"].y::-webkit-slider-thumb {
+  background: var(--color-accent-2);
+}
+
+.inputWrapper input[type="range"]::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  background: black;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.inputWrapper input[type="range"].disabled::-moz-range-thumb {
+  background: var(--color-disabled);
+}
+
+.inputWrapper input[type="range"].x::-moz-range-thumb {
+  background: var(--color-accent-1);
+}
+
+.inputWrapper input[type="range"].y::-moz-range-thumb {
+  background: var(--color-accent-2);
+}
+
+.inputWrapper input[type="range"]::-ms-thumb {
+  width: 15px;
+  height: 15px;
+  background: black;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.inputWrapper input[type="range"].disabled::-ms-thumb {
+  background: var(--color-disabled);
+}
+
+.inputWrapper input[type="range"].x::-ms-thumb {
+  background: var(--color-accent-1);
+}
+
+.inputWrapper input[type="range"].y::-ms-thumb {
+  background: var(--color-accent-2);
+}
+
+.inputWrapper input[type="checkbox"] {
+  appearance: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid #9ca3af;
+  border-radius: 0.25rem;
+  background-color: #f9fafb;
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.inputWrapper input[type="checkbox"]:checked {
+  background-color: black;
+  border-color: black;
+}

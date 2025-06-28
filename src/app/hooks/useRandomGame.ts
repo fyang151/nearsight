@@ -38,14 +38,18 @@ export const useRandomGame = ({
 
   const [loading, setLoading] = useState<boolean>(true);
 
+  const fetchIconById = (id: string) => {
+    const championIcon = (championIcons as ChampionIcons)[id].default.src;
+    return championIcon;
+  };
+
   const loadChampion = async () => {
     const randomChampionKey = Math.floor(Math.random() * championsArray.length);
 
     const currentChampion = championsArray[randomChampionKey];
 
-    const selectedChampionIcon = (championIcons as ChampionIcons)[
-      currentChampion.id
-    ].default.src;
+    const selectedChampionIcon = await fetchIconById(currentChampion.id);
+
     const pixelatedChampionIcon = await getPixelatedImage(
       selectedChampionIcon,
       xPixels,
@@ -126,5 +130,6 @@ export const useRandomGame = ({
     newChampion,
     loading,
     resetChamps,
+    fetchIconById,
   };
 };
