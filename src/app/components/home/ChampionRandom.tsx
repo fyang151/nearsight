@@ -36,7 +36,7 @@ const ChampionGuesser = () => {
   }, [xPixels, yPixels, isGrayScale]);
 
   useEffect(() => {
-    const handleGlobalKeyDown = (event: KeyboardEvent) => {
+    const handleGlobalKeyDown = () => {
       const activeElement = document.activeElement;
 
       if (activeElement?.getAttribute("type") !== "text" && inputRef.current) {
