@@ -21,6 +21,8 @@ const ChampionGuesser = () => {
 
   const [showFullIcon, setShowFullIcon] = useState(false);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const { champion, newChampion, loading, resetChamps, fetchIconById } =
     useRandomGame({
       xPixels,
@@ -32,6 +34,22 @@ const ChampionGuesser = () => {
     setShowFullIcon(false);
     resetChamps();
   }, [xPixels, yPixels, isGrayScale]);
+
+  useEffect(() => {
+    const handleGlobalKeyDown = (event: KeyboardEvent) => {
+      const activeElement = document.activeElement;
+
+      if (activeElement?.getAttribute("type") !== "text" && inputRef.current) {
+        inputRef.current.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleGlobalKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleGlobalKeyDown);
+    };
+  }, []);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -52,8 +70,6 @@ const ChampionGuesser = () => {
       handleCheckGuess();
     }
   }, [guess, shouldSubmitWithSpace]);
-
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleCheckGuess = () => {
     if (
