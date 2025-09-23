@@ -36,6 +36,10 @@ const ChampionGuesser = () => {
   }, [xPixels, yPixels, isGrayScale]);
 
   useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+
     const handleGlobalKeyDown = () => {
       const activeElement = document.activeElement;
 
@@ -128,6 +132,7 @@ const ChampionGuesser = () => {
               <form onSubmit={handleSubmit}>
                 <input
                   type="text"
+                  placeholder="__"
                   value={guess || ""}
                   onChange={(event) => setGuess(event.target.value)}
                   onKeyDown={handleKeyDown}
@@ -181,7 +186,7 @@ const ChampionGuesser = () => {
           <form onSubmit={handleSubmit}>
             <input
               type="text"
-              placeholder="Who is this champion...."
+              placeholder="__"
               value={guess || ""}
               onChange={(event) => setGuess(event.target.value)}
               onKeyDown={handleKeyDown}
