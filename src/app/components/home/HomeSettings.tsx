@@ -69,6 +69,7 @@ const HomeSettings = ({
     changeY(value);
     setBothPixels(value);
     setBothPixelsInput(String(value));
+    setBothSliderDisabled(false);
   };
 
   const handleChangeBothInput = (value: string) => {
