@@ -6,7 +6,7 @@ import championIcons from "../data/championIcons";
 import champions from "../data/champions.json";
 // import champions from "../data/testChampions.json";
 
-import { getPixelatedImage } from "../utils/pixelateImage";
+import { Pixyelator } from "pixyelator";
 import {
   useGameProps,
   ChampionIcons,
@@ -29,13 +29,15 @@ export const useListGame = ({
     const championsArray = shuffle(championsData);
 
     const addPixelatedChampion = async (icon: string, info: ChampionInfo) => {
-      const pixelatedImage = await getPixelatedImage(
-        icon,
-        xPixels,
-        yPixels,
-        isGrayScale,
-        1
-      );
+      const pixyelator = await Pixyelator.fromImage(icon, {
+        maxWorkers: 1,
+      });
+      const pixelatedImage = await pixyelator
+        .pixelate(xPixels, yPixels, {
+          grayscale: isGrayScale,
+        })
+        .toDataURL();
+      pixyelator.dispose();
       const pixelatedChampion = {
         info: info,
         icon: pixelatedImage,

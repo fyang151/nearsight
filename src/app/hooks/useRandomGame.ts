@@ -4,6 +4,8 @@ let EXCLUDED_PREV_CHAMPION_COUNT = 3;
 
 import { useState, useEffect } from "react";
 
+import { Pixyelator } from "pixyelator";
+
 import championIcons from "../data/championIcons";
 import champions from "../data/champions.json";
 
@@ -50,16 +52,26 @@ export const useRandomGame = ({
 
     const selectedChampionIcon = await fetchIconById(currentChampion.id);
 
-    const pixelatedChampionIcon = await getPixelatedImage(
-      selectedChampionIcon,
-      xPixels,
-      yPixels,
-      isGrayScale
-    );
+    // const pixelatedChampionIcon = await getPixelatedImage(
+    //   selectedChampionIcon,
+    //   xPixels,
+    //   yPixels,
+    //   isGrayScale
+    // );
+
+    const pixyelator = await Pixyelator.fromImage(selectedChampionIcon, {
+      maxWorkers: 1,
+    });
+    const pixelatedImage = await pixyelator
+      .pixelate(xPixels, yPixels, {
+        grayscale: isGrayScale,
+      })
+      .toDataURL();
+    pixyelator.dispose();
 
     const newChampion = {
       info: currentChampion,
-      icon: pixelatedChampionIcon,
+      icon: pixelatedImage,
     };
 
     setChampionQueue((prev) => [...prev, newChampion]);

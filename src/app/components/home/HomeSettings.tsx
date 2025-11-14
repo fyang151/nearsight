@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { pixelateToCanvas } from "../../utils/pixelateImage";
+import { Pixyelator } from "pixyelator";
 
 import styles from "./Settings.module.css";
 
@@ -129,7 +129,16 @@ const HomeSettings = ({
   };
 
   useEffect(() => {
-    pixelateToCanvas("/mePlaceholder.jpg", xPixels, yPixels, isGrayScale);
+    const run = async () => {
+      const pixyelator = await Pixyelator.fromImage("/mePlaceholder.jpg", {
+        targetCanvas: document.getElementById("demo") as HTMLCanvasElement,
+      });
+      pixyelator.pixelate(xPixels, yPixels, {
+        grayscale: isGrayScale,
+      });
+      pixyelator.dispose();
+    };
+    run();
   }, [xPixels, yPixels, isGrayScale]);
 
   return (
