@@ -9,7 +9,6 @@ import { Pixyelator } from "pixyelator";
 import championIcons from "../data/championIcons";
 import champions from "../data/champions.json";
 
-import { getPixelatedImage } from "../utils/pixelateImage";
 import { useGameProps, Champion, ChampionIcons } from "../types/champion";
 
 CHAMPION_PRELOAD_COUNT = Math.min(
@@ -21,9 +20,6 @@ EXCLUDED_PREV_CHAMPION_COUNT = Math.min(
   CHAMPION_PRELOAD_COUNT,
   EXCLUDED_PREV_CHAMPION_COUNT
 );
-
-console.info("CHAMPION_PRELOAD_COUNT: ", CHAMPION_PRELOAD_COUNT);
-console.info("EXCLUDED_PREV_CHAMPION_COUNT: ", EXCLUDED_PREV_CHAMPION_COUNT);
 
 const championsArray = Object.values(champions.data);
 
@@ -50,14 +46,7 @@ export const useRandomGame = ({
 
     const currentChampion = championsArray[randomChampionKey];
 
-    const selectedChampionIcon = await fetchIconById(currentChampion.id);
-
-    // const pixelatedChampionIcon = await getPixelatedImage(
-    //   selectedChampionIcon,
-    //   xPixels,
-    //   yPixels,
-    //   isGrayScale
-    // );
+    const selectedChampionIcon = fetchIconById(currentChampion.id);
 
     const pixyelator = await Pixyelator.fromImage(selectedChampionIcon, {
       maxWorkers: 1,
