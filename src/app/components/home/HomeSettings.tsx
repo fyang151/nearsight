@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { Pixyelator } from "pixyelator";
 
@@ -41,6 +41,8 @@ const HomeSettings = ({
 
   const [xPixelsInput, setXPixelsInput] = useState<string>(String(xPixels));
   const [yPixelsInput, setYPixelsInput] = useState<string>(String(yPixels));
+
+  const pixyelatorRef = useRef<Pixyelator | null>(null);
 
   const handleChangeX = (value: number) => {
     setBothSliderDisabled(true);
@@ -130,16 +132,30 @@ const HomeSettings = ({
   };
 
   useEffect(() => {
-    const run = async () => {
+    const init = async () => {
       const pixyelator = await Pixyelator.fromImage("/mePlaceholder.jpg", {
         targetCanvas: document.getElementById("demo") as HTMLCanvasElement,
       });
+      pixyelatorRef.current = pixyelator;
       pixyelator.pixelate(xPixels, yPixels, {
         grayscale: isGrayScale,
       });
-      pixyelator.dispose();
     };
-    run();
+    init();
+
+    return () => {
+      if (pixyelatorRef.current) {
+        pixyelatorRef.current.dispose();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (pixyelatorRef.current) {
+      pixyelatorRef.current.pixelate(xPixels, yPixels, {
+        grayscale: isGrayScale,
+      });
+    }
   }, [xPixels, yPixels, isGrayScale]);
 
   return (
