@@ -8,12 +8,23 @@ import HomeSettings from "./HomeSettings";
 
 import styles from "../Loader.module.css";
 
+const Instructions = () => {
+  return (
+    <div>
+      <p>
+        New champions are automatically generated when you type the correct name
+        or ID!
+      </p>
+    </div>
+  );
+};
+
 const ChampionGuesser = () => {
   const [guess, setGuess] = useState("");
 
-  const [xPixels, setXPixels] = useState(4);
-  const [yPixels, setYPixels] = useState(4);
-  const [bothPixels, setBothPixels] = useState<number>(4);
+  const [xPixels, setXPixels] = useState(5);
+  const [yPixels, setYPixels] = useState(5);
+  const [bothPixels, setBothPixels] = useState<number>(5);
 
   const [isGrayScale, setIsGrayScale] = useState<boolean>(false);
 
@@ -36,6 +47,10 @@ const ChampionGuesser = () => {
   }, [xPixels, yPixels, isGrayScale]);
 
   useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+
     const handleGlobalKeyDown = () => {
       const activeElement = document.activeElement;
 
@@ -111,23 +126,27 @@ const ChampionGuesser = () => {
               />
             )}
           </div>
-          <div className="w-[350px] h-full overflow-x-visible">
-            <div className="flex items-center gap-4">
-              <button className="flex items-center" onClick={handleNewChampion}>
-                <img src="/arrow-right.svg" className="w-8 h-8" />
-              </button>
-              <button
-                className="flex items-center"
-                onClick={() => setShowFullIcon(!showFullIcon)}
-              >
-                <img src="/flag.svg" className="w-8 h-8" />
-              </button>
-            </div>
-            <div className="italic text-7xl">Who is this champion?</div>
-            <div className="mt-8 h-full overflow-visible">
+          <div className="flex flex-col justify-between w-[350px] h-full overflow-x-visible">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center gap-4">
+                <button
+                  className="flex items-center"
+                  onClick={handleNewChampion}
+                >
+                  <img src="/arrow-right.svg" className="w-8 h-8" />
+                </button>
+                <button
+                  className="flex items-center"
+                  onClick={() => setShowFullIcon(!showFullIcon)}
+                >
+                  <img src="/flag.svg" className="w-8 h-8" />
+                </button>
+              </div>
+              <div className="italic text-7xl">Who is this champion?</div>
               <form onSubmit={handleSubmit}>
                 <input
                   type="text"
+                  placeholder="Type here..."
                   value={guess || ""}
                   onChange={(event) => setGuess(event.target.value)}
                   onKeyDown={handleKeyDown}
@@ -136,6 +155,7 @@ const ChampionGuesser = () => {
                 />
               </form>
             </div>
+            <Instructions />
           </div>
         </div>
         <div className="flex justify-center w-[80vw]">
@@ -154,41 +174,76 @@ const ChampionGuesser = () => {
         </div>
       </div>
       {/* mobile view */}
-      <div className="flex flex-col sm:hidden justify-center">
-        <div className="flex flex-col justify-between items-center h-[calc(100vh-226px)]">
-          <span />
-          <div className="w-[calc(min(100vw,100vh-226px-56px-40px))] h-[calc(min(100vw,100vh-226px-56px-40px))] flex">
-            {loading ? (
-              <div className="aspect-square flex items-center justify-center">
-                <span className={styles.loader} />
-              </div>
-            ) : (
+      <div className="flex flex-col sm:hidden justify-center p-4 gap-4">
+        <div>
+          <Instructions />
+        </div>
+        {/* what was i thinking when i wrote this */}
+        <div className="w-[calc(min(90vw,90vh-226px-56px-40px))] h-[calc(min(90vw,90vh-226px-56px-40px))] flex relative">
+          {loading ? (
+            <div className="aspect-square flex items-center justify-center">
+              <span className={styles.loader} />
+            </div>
+          ) : (
+            <>
               <img
-                src={champion?.icon}
+                src={
+                  showFullIcon
+                    ? fetchIconById(champion?.info.id ?? "")
+                    : champion?.icon
+                }
                 className="w-full h-full rounded-2xl"
                 style={{ imageRendering: "pixelated" }}
                 draggable="false"
               />
-            )}
-          </div>
-          <div className="flex w-[60vw] h-[60px] justify-around items-center">
-            <img
-              src="/arrow-counterclockwise.svg"
-              onClick={() => resetChamps()}
-              className="w-6 h-6 cursor-pointer"
-            />
-          </div>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              placeholder="Who is this champion...."
-              value={guess || ""}
-              onChange={(event) => setGuess(event.target.value)}
-              onKeyDown={handleKeyDown}
-              className="text-4xl p-2 focus:outline-none w-full text-center"
-            />
-          </form>
+              <form
+                onSubmit={handleSubmit}
+                className="absolute inset-0 flex items-center justify-center"
+              >
+                <input
+                  ref={inputRef}
+                  type="text"
+                  placeholder="Tap here to guess..."
+                  value={guess || ""}
+                  onChange={(event) => setGuess(event.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="text-xl p-2 focus:outline-none text-center text-ellipsis bg-transparent text-white placeholder-white/70 border-none w-full max-w-sm"
+                  style={{
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    textShadow: "2px 2px 4px rgba(0,0,0,0.8)",
+                  }}
+                />
+              </form>
+            </>
+          )}
         </div>
+        <div className="flex justify-center items-center gap-16">
+          <div
+            className="flex items-center"
+            onClick={() => setShowFullIcon(!showFullIcon)}
+          >
+            Reveal
+            <img src="/flag.svg" className="w-8 h-8 cursor-pointer" />
+          </div>
+          <div className="flex items-center" onClick={handleNewChampion}>
+            Next
+            <img src="/arrow-right.svg" className="w-8 h-8 cursor-pointer" />
+          </div>
+        </div>
+        <p className="sm:hidden">This site looks better on desktop.</p>
+        <HomeSettings
+          xPixels={xPixels}
+          yPixels={yPixels}
+          setXPixels={setXPixels}
+          setYPixels={setYPixels}
+          isGrayScale={isGrayScale}
+          setIsGrayScale={setIsGrayScale}
+          bothPixels={bothPixels}
+          setBothPixels={setBothPixels}
+          shouldSubmitWithSpace={shouldSubmitWithSpace}
+          setShouldSubmitWithSpace={setShouldSubmitWithSpace}
+        />
       </div>
     </>
   );

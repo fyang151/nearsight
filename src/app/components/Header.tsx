@@ -3,7 +3,7 @@ import Link from "next/link";
 const Header = ({ currentPage }: { currentPage?: string }) => {
   return (
     <div className="flex items-center justify-between p-2">
-      <h1 className="hidden sm:block text-3xl">Nearsight.cc</h1>
+      <h1 className="text-3xl">Nearsight.cc</h1>
       <div>
         {/* cant use Link on /list because it breaks for some reason?? */}
         <Link
