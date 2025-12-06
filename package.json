@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@vercel/analytics": "^1.4.1",
-    "next": "15.0.3",
+    "next": "^15.0.5",
     "pixyelator": "^1.1.68",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106"
